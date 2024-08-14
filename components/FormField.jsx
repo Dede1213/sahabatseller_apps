@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import { icons } from '../constants'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-const FormField = ({ title, value, handleChangeText, otherStyles, otherTextInputStyles, placeholder, keyboardType, handleBlur, editable, info, ...proops }) => {
+const FormField = ({ title, value, handleChangeText, otherStyles, otherTextInputStyles, placeholder, keyboardType, handleBlur, editable, info, multiline, numberOfLines, ...proops }) => {
     const [showPassword, setShowPassword] = useState(false)
     const [showPasswordConfirm, setShowPasswordConfirm] = useState(false)
     const [showPasswordNew, setShowPasswordNew] = useState(false)
@@ -18,7 +18,7 @@ const FormField = ({ title, value, handleChangeText, otherStyles, otherTextInput
                     </TouchableOpacity>
                 }
             </View>
-            <View className={`border-2 border-gray-200 w-full h-[50px] px-4 rounded-xl focus:border-secondary items-center flex-row ${otherTextInputStyles}`}>
+            <View className={`border-2 border-gray-200 w-full px-4 rounded-xl focus:border-secondary items-center flex-row ${otherTextInputStyles}`}>
                 <TextInput
                     className="flex-1 text-gray-100 font-poppinsSemiBold text-base"
                     value={value}
@@ -29,6 +29,8 @@ const FormField = ({ title, value, handleChangeText, otherStyles, otherTextInput
                     secureTextEntry={title === 'Password' && !showPassword || title === 'Password Baru' && !showPasswordNew || title === 'Konfirmasi Password Baru' && !showPasswordConfirm}
                     keyboardType={keyboardType}
                     editable={editable}
+                    multiline={multiline ? multiline : false}
+                    numberOfLines={numberOfLines ? numberOfLines : 2}
                 />
 
                 {title === 'Password' && (

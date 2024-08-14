@@ -16,7 +16,6 @@ const validationSchema = Yup.object().shape({
   fullname: Yup.string().required('*fullname wajib diisi'),
   email: Yup.string().email('*email tidak valid').required('*email wajib diisi'),
   phone: Yup.string().min(10, '*nomor handphone minimal 10 angka').required('*nomor handphone wajib diisi'),
-  affiliator_id: Yup.string().required('*affiliator id wajib diisi'),
 });
 
 const validationSchemaPassword = Yup.object().shape({
@@ -25,18 +24,19 @@ const validationSchemaPassword = Yup.object().shape({
 });
 
 
-const ProfileUser = ({ navigation }) => {
+const ProfileUser = () => {
 
-  const { user } = useGlobalContext()
+  const { user, setUser } = useGlobalContext()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmittingPassword, setIsSubmittingPassword] = useState(false)
   const [uploading, setUploading] = useState(false);
+  const [refetchTrigger, setRefetchTrigger] = useState(0);
 
   const [initialValues, setInitialValues] = useState({
     fullname: '',
     email: '',
     phone: '',
-    affiliator_id: '',
+    affiliator_code: '',
   });
 
   const [initialValuesPhoto, setInitialValuesPhoto] = useState({
@@ -48,9 +48,17 @@ const ProfileUser = ({ navigation }) => {
     confirm_password: '',
   });
 
+  const [affiliatorValue, setAffiliatorValue] = useState({
+    affiliator_name : '',
+    affiliator_phone : '',
+  })
 
-
-
+  let info = '';
+  if (affiliatorValue.affiliator_name) {
+    info = `Affiliator anda : ${affiliatorValue.affiliator_name} - ${affiliatorValue.affiliator_phone}`;
+  } else {
+    info = "Data affiliator tidak ditemukan, pastikan kode affiliator anda benar.";
+  }
 
   useEffect(() => {
     const getData = async () => {
@@ -66,11 +74,17 @@ const ProfileUser = ({ navigation }) => {
           });
         if (response.code === 200) {
           setInitialValues({
+            code: response.data.code || '',
             fullname: response.data.fullname || '',
             email: response.data.email || '',
             phone: response.data.phone || '',
-            affiliator_id: response.data.affiliator_id || '',
+            affiliator_code: response.data.affiliator_code || '',
           });
+
+          setAffiliatorValue({
+            affiliator_name : response.data.affiliator_name || '',
+            affiliator_phone : response.data.affiliator_phone || '',
+          })
 
           setInitialValuesPhoto({
             photo: response.data.photo || '',
@@ -82,7 +96,7 @@ const ProfileUser = ({ navigation }) => {
     };
 
     getData()
-  }, []);
+  }, [refetchTrigger]);
 
 
 
@@ -101,12 +115,13 @@ const ProfileUser = ({ navigation }) => {
           fullname: form.fullname,
           email: form.email,
           phone: form.phone,
-          affiliator_id: form.affiliator_id
+          affiliator_code: form.affiliator_code
         },
       });
 
       if (response.code) {
         if (response.code === 200) {
+          setRefetchTrigger(prev => prev + 1);
           Alert.alert('Notifikasi', 'akun anda berhasil diubah.')
         }
       } else {
@@ -129,7 +144,7 @@ const ProfileUser = ({ navigation }) => {
     }
 
     try {
-      const response = await fetchData(`${API_HOST}/user/update`, {
+      const response = await fetchData(`${API_HOST}/user/update/password`, {
         method: 'put',
         headers: {
           'X-access-token': user.token,
@@ -201,7 +216,7 @@ const ProfileUser = ({ navigation }) => {
     formData.append('user_id', user.id);
 
     try {
-      const response = await fetchData('http://20.20.20.127:2500/user/photo/', {
+      const response = await fetchData(`${API_HOST}/user/photo/`, {
         headers: {
           'X-access-token': storedTokenUser,
           'Content-Type': 'multipart/form-data',
@@ -209,6 +224,8 @@ const ProfileUser = ({ navigation }) => {
         method: 'put',
         data: formData
       });
+      setUser(prev => ({ ...prev, photo: response.data.photo }));
+
       Alert.alert("Notifikasi", response.message);
     } catch (error) {
       Alert.alert("Notifikasi", error.message)
@@ -231,7 +248,7 @@ const ProfileUser = ({ navigation }) => {
             <View>
               {!initialValuesPhoto.photo.uri &&
                 <Image
-                  source={{ uri: `${API_HOST}/profile/${initialValuesPhoto.photo}` }}
+                  source={{ uri: `${API_HOST}/profile/images/${initialValuesPhoto.photo}` }}
                   resizeMode="cover"
                   className="w-[150px] h-[150px] rounded-2xl mb-4"
                 />
@@ -272,11 +289,21 @@ const ProfileUser = ({ navigation }) => {
           {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
             <View>
               <FormField
+                title="Kode Pemilik Toko"
+                value={values.code}
+                handleChangeText={handleChange('code')}
+                handleBlur={handleBlur('code')}
+                otherStyles="mt-0"
+                otherTextInputStyles="bg-gray-200"
+                editable={false}
+              />
+
+              <FormField
                 title="Nama Pemilik Toko"
                 value={values.fullname}
                 handleChangeText={handleChange('fullname')}
                 handleBlur={handleBlur('fullname')}
-                otherStyles="mt-0"
+                otherStyles="mt-3"
               />
               {touched.fullname && errors.fullname && <Text className="text-gray-50">{errors.fullname}</Text>}
 
@@ -300,18 +327,19 @@ const ProfileUser = ({ navigation }) => {
               {touched.email && errors.email && <Text className="text-gray-50">{errors.email}</Text>}
 
               <FormField
+                info={info}
                 title="Kode Affiliator"
-                value={values.affiliator_id}
-                handleChangeText={handleChange('affiliator_id')}
-                handleBlur={handleBlur('affiliator_id')}
+                value={values.affiliator_code}
+                handleChangeText={handleChange('affiliator_code')}
+                handleBlur={handleBlur('affiliator_code')}
                 otherStyles="mt-3"
               />
-              {touched.affiliator_id && errors.affiliator_id && <Text className="text-gray-50">{errors.affiliator_id}</Text>}
 
               <CustomButton
                 title="Ubah Data"
                 handlePress={handleSubmit}
                 containerStyles={"mt-7 bg-secondary-200"}
+                textStyles="text-white"
                 isLoading={isSubmitting}
               />
             </View>
@@ -353,6 +381,7 @@ const ProfileUser = ({ navigation }) => {
                 title="Ubah Password"
                 handlePress={handleSubmit}
                 containerStyles={"mt-7 bg-secondary-200"}
+                textStyles="text-white"
                 isLoading={isSubmittingPassword}
               />
             </View>

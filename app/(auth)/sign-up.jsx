@@ -156,6 +156,7 @@ const SignUp = ({ navigation }) => {
                   title="Daftar"
                   handlePress={handleSubmit}
                   containerStyles={"mt-7 bg-secondary-200"}
+                  textStyles="text-white"
                   isLoading={isSubmitting}
                 />
               </View>

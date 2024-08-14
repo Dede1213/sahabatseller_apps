@@ -10,7 +10,7 @@ import { API_HOST } from '@env';
 
 const CustomDrawerContent = (props) => {
 
-  const { isLoading, isLoggedIn} = useGlobalContext();
+  const { isLoading, isLoggedIn } = useGlobalContext();
 
   useEffect(() => {
     if (!isLoading && !isLoggedIn) {
@@ -28,8 +28,8 @@ const CustomDrawerContent = (props) => {
   return (
     <SafeAreaView style={{ flex: 1 }} edges={['left', 'right', 'bottom']}>
       <DrawerContentScrollView {...props}>
-        <TouchableOpacity style={styles.userInfoSection} onPress={() => navigation.navigate('Profil')}>
-          <Image source={{ uri: user ? `${API_HOST}/profile/${user.photo}` : `${API_HOST}/profile/default.png` }} style={styles.profileImage} />
+        <TouchableOpacity style={styles.userInfoSection} onPress={() => navigation.navigate('Profile')}>
+          <Image source={{ uri: user ? `${API_HOST}/profile/images/${user.photo}` : `${API_HOST}/profile/default.png` }} style={styles.profileImage} />
           <View style={styles.premiumBadge}>
             <Text style={styles.premiumText}>Premium</Text>
           </View>
@@ -47,11 +47,11 @@ const CustomDrawerContent = (props) => {
 
         <View style={styles.outletSection}>
           <View>
-            <Text className="text-gray-100 font-PoppinsBold text-lg">Sahabat Seller</Text>
-            <Text className="text-gray-100">Kantor Pusat</Text>
+            <Text className="text-gray-100 font-PoppinsBold text-lg">{user?.store_name ? user.store_name : ''}</Text>
+            <Text className="text-gray-100">{user?.location_name ? user.location_name : ''}</Text>
           </View>
 
-          <TouchableOpacity style={styles.outletButton}>
+          <TouchableOpacity style={styles.outletButton} onPress={() => navigation.navigate('LocationStore', { screen: 'SwitchLocationStack' })}>
             <Text style={styles.outletButtonText}>Pilih Lokasi</Text>
           </TouchableOpacity>
         </View>
@@ -61,7 +61,7 @@ const CustomDrawerContent = (props) => {
         {moduleAccessArray.includes(1) && (
           <DrawerItem
             label="Beranda"
-            onPress={() => { navigation.navigate('Beranda'); }}
+            onPress={() => { navigation.navigate('Home'); }}
             icon={() => <Icon name="home-outline" color="gray" size={25} />}
             labelStyle={{ marginLeft: -20, color: '#494952', fontFamily: 'PoppinsRegular', marginTop: 5 }}
             style={{ marginTop: -15 }}
@@ -131,7 +131,7 @@ const CustomDrawerContent = (props) => {
         {moduleAccessArray.includes(8) && (
           <DrawerItem
             label="Pegawai"
-            onPress={() => { }}
+            onPress={() => { navigation.navigate('Employee', { screen: 'EmployeeStack' }) }}
             icon={() => <Icon name="human-male-board-poll" color="gray" size={25} />}
             labelStyle={{ marginLeft: -20, color: '#494952', fontFamily: 'PoppinsRegular', marginTop: 5 }}
             style={{ marginTop: -15 }}
@@ -141,7 +141,7 @@ const CustomDrawerContent = (props) => {
         {moduleAccessArray.includes(9) && (
           <DrawerItem
             label="Lokasi Toko"
-            onPress={() => { }}
+            onPress={() => navigation.navigate('LocationStore', { screen: 'LocationStoreStack' })}
             icon={() => <Icon name="google-maps" color="gray" size={25} />}
             labelStyle={{ marginLeft: -20, color: '#494952', fontFamily: 'PoppinsRegular', marginTop: 5 }}
             style={{ marginTop: -15 }}

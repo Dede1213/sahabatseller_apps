@@ -27,8 +27,8 @@ const ProfileStore = () => {
   const [initialValues, setInitialValues] = useState({
     name: '',
     type_id: '',
-    tax_count: 0,
-    margin_percentage: 5000,
+    tax_count: '',
+    margin_percentage: '',
   });
 
   const [initialValuesLogo, setInitialValuesLogo] = useState({
@@ -79,12 +79,11 @@ const ProfileStore = () => {
 
         if (response.code) {
           if (response.code === 200) {
-            console.log(response.data)
             setInitialValues({
               name: response.data.name || '',
               type_id: response.data.type_id || '',
-              tax_count: response.data.tax_count || 0,
-              margin_percentage: 5000,
+              tax_count: response.data.tax_count || '',
+              margin_percentage: (response.data.margin_percentage).toString() ? (response.data.margin_percentage).toString() : ''
             });
             setInitialValuesLogo({
               logo: response.data.logo || '',
@@ -102,36 +101,36 @@ const ProfileStore = () => {
   }, []);
 
   const submitAction = async (form) => {
-    console.log(form)
-    // try {
-    //   setIsSubmitting(true)
-    //   const response = await fetchData(`${API_HOST}/store/update`, {
-    //     method: 'put',
-    //     headers: {
-    //       'X-access-token': user.token,
-    //       'Content-Type': 'application/json',
-    //       'Accept': 'application/json',
-    //     },
-    //     data: {
-    //       id: user.store_id,
-    //       name: form.name,
-    //       tax_count: form.tax_count,
-    //       margin_percentage: form.margin_percentage,
-    //     },
-    //   });
+    try {
+      setIsSubmitting(true)
+      const response = await fetchData(`${API_HOST}/store/update`, {
+        method: 'put',
+        headers: {
+          'X-access-token': user.token,
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        data: {
+          id: user.store_id,
+          name: form.name,
+          tax_count: form.tax_count,
+          type_id: form.type_id,
+          margin_percentage: parseInt(form.margin_percentage) ? parseInt(form.margin_percentage) : 0,
+        },
+      });
 
-    //   if (response.code) {
-    //     if (response.code === 200) {
-    //       Alert.alert('Notifikasi', 'toko anda berhasil diubah.')
-    //     }
-    //   } else {
-    //     Alert.alert(response.message)
-    //   }
-    // } catch (error) {
-    //   Alert.alert(error.message)
-    // } finally {
-    //   setIsSubmitting(false)
-    // }
+      if (response.code) {
+        if (response.code === 200) {
+          Alert.alert('Notifikasi', 'toko anda berhasil diubah.')
+        }
+      } else {
+        Alert.alert(response.message)
+      }
+    } catch (error) {
+      Alert.alert(error.message)
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   const MAX_SIZE = 2 * 1024 * 1024; // Maximum file size in bytes (5MB)
@@ -179,7 +178,7 @@ const ProfileStore = () => {
     formData.append('store_id', user.store_id);
 
     try {
-      const response = await fetchData('http://20.20.20.127:2500/store/photo/', {
+      const response = await fetchData(`${API_HOST}/store/photo/`, {
         headers: {
           'X-access-token': storedTokenUser,
           'Content-Type': 'multipart/form-data',
@@ -210,7 +209,7 @@ const ProfileStore = () => {
             <View>
               {!initialValuesLogo.logo.uri &&
                 <Image
-                  source={{ uri: `${API_HOST}/profile/${initialValuesLogo.logo}` }}
+                  source={{ uri: `${API_HOST}/store/images/${initialValuesLogo.logo}` }}
                   resizeMode="cover"
                   className="w-[150px] h-[150px] rounded-2xl mb-4"
                 />
@@ -248,7 +247,7 @@ const ProfileStore = () => {
           }}
           enableReinitialize
         >
-          {({ handleChange, handleBlur, handleSubmit, values, setFieldValue, errors, touched }) => (
+          {({ handleChange, handleBlur, handleSubmit, values, errors, touched, setFieldValue }) => (
             <View>
 
               <FormField
@@ -260,7 +259,7 @@ const ProfileStore = () => {
               />
               {touched.name && errors.name && <Text className="text-gray-50">{errors.name}</Text>}
 
-              {/* <SelectField
+              <SelectField
                 title="Tipe Toko"
                 data={storeType}
                 value={values.type_id}
@@ -270,23 +269,23 @@ const ProfileStore = () => {
                 placeholder="Pilih Tipe Toko"
                 otherStyles="mt-3"
               />
-              {touched.type_id && errors.type_id && <Text className="text-gray-50">{errors.type_id}</Text>} */}
+              {touched.type_id && errors.type_id && <Text className="text-gray-50">{errors.type_id}</Text>}
 
-              {/* <SelectField
+              <SelectField
                 title="Aktifkan Pajak ?"
                 info={"Jika Ya, maka pajak 11% akan otomatis terbentuk di setiap transaksi."}
-                data={[{ label: "Ya", value: 1 }, { label: "Tidak", value: 0 }]}
+                data={[{ label: "Ya", value: "YA" }, { label: "Tidak", value: "TIDAK" }]}
                 value={values.tax_count}
                 onValueChange={(value) => setFieldValue('tax_count', value)}
                 handleChangeText={handleChange('tax_count')}
                 handleBlur={handleBlur('tax_count')}
                 placeholder="Pilih"
                 otherStyles="mt-3 w-[200px]"
-              /> */}
+              />
 
               <View className="flex-row items-center">
                 <FormField
-                  // info={"Jika diisi, sistem akan memberikan rekomendasi harga pada saat tambah produk, berdasarkan estimasi margin."}
+                  info={"Jika diisi, sistem akan memberikan rekomendasi harga jual pada saat tambah produk, berdasarkan estimasi margin."}
                   title="Estimasi Margin"
                   value={values.margin_percentage}
                   handleChangeText={handleChange('margin_percentage')}
@@ -301,6 +300,7 @@ const ProfileStore = () => {
                 title="Ubah Data"
                 handlePress={handleSubmit}
                 containerStyles={"mt-7 bg-secondary-200"}
+                textStyles="text-white"
                 isLoading={isSubmitting}
               />
             </View>

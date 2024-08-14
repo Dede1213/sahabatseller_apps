@@ -4,5 +4,6 @@
         "titleBar.activeBackground": "#e55410",
         "titleBar.activeForeground": "#FBFAF9"
     },
-    "java.compile.nullAnalysis.mode": "automatic"
+    "java.compile.nullAnalysis.mode": "automatic",
+    "java.configuration.updateBuildConfiguration": "disabled"
 }

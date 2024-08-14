@@ -1,37 +1,55 @@
-import { StyleSheet, Text, TextInput, TouchableOpacity, View, Image, Alert } from 'react-native'
+import { TextInput, TouchableOpacity, View, Image } from 'react-native'
 import React, { useState } from 'react'
 import { icons } from '../constants'
-import { router, usePathname } from 'expo-router';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-const SearchInput = ({ initialQuery }) => {
-    const pathname = usePathname()
-    const [query, setQuery] = useState(initialQuery || '')
+const SearchInput = ({ searchQuery, setSearchQuery, orderBy, setOrderBy, placeholder, setIsloading, searchStyle }) => {
+    const [inputText, setInputText] = useState('');
+    const handleSubmit = () => {
+        setIsloading(true);
+        setSearchQuery(inputText);
+    };
     return (
-        <View className="border-2 border-black-200 w-full h-16 px-4 bg-black-100 rounded-2xl focus:border-secondary items-center flex-row space-x-4">
-            <TextInput
-                className="text-base mt-0.5 text-white font-poppinsRegular flex-1"
-                value={query}
-                placeholder="Search for a video topic"
-                placeholderTextColor="#CDCDE0"
-                onChangeText={(e) => setQuery(e)}
-            />
+        <View className="flex-row items-center">
+            <View className={`border-2 border-gray-200 h-[50px] px-4 bg-primary rounded-xl focus:border-gray-100 items-center flex-row space-x-4 ${searchStyle}`}>
+                <TextInput
+                    className="text-base mt-0.5 text-gray-100 font-poppinsRegular flex-1"
+                    value={inputText}
+                    placeholder={searchQuery ? searchQuery : placeholder}
+                    placeholderTextColor="#CDCDE0"
+                    onChangeText={setInputText}
+                    onSubmitEditing={handleSubmit}
+                />
 
-            <TouchableOpacity
+                <TouchableOpacity
+                    onPress={() => {
+                        handleSubmit();
+                    }}
+                >
+                    <View className="flex-row items-center justify-center">
+                        <Image
+                            source={icons.search}
+                            className="w-5 h-5 ml-2"
+                            resizeMode='contain'
+                        />
+                    </View>
+                </TouchableOpacity>
+            </View>
+            {orderBy && <TouchableOpacity
                 onPress={() => {
-                    if (!query) {
-                        return Alert.alert('Missing Query', "Please enter a search query")
+                    setIsloading(true);
+                    if (orderBy === 'asc') {
+                        setOrderBy('desc');
+                    } else {
+                        setOrderBy('asc');
                     }
-                    if (pathname.startsWith('/search')) router.setParams({ query }) 
-                        else router.push(`/search/${query}`)
-                    
                 }}
             >
-                <Image
-                    source={icons.search}
-                    className="w-5 h-5"
-                    resizeMode='contain'
-                />
-            </TouchableOpacity>
+                <View className="flex-row items-center justify-center ml-3">
+                    <Icon name={orderBy==='asc' ? 'sort-ascending' : 'sort-descending'} color="#1a7dcf" size={40} />
+                </View>
+            </TouchableOpacity>}
+
         </View>
     )
 }

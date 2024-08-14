@@ -97,6 +97,7 @@ const SignIn = ({ navigation }) => {
                   title="Masuk"
                   handlePress={handleSubmit}
                   containerStyles={"mt-7 bg-secondary-200 "}
+                  textStyles="text-white"
                   isLoading={isSubmitting}
                 />
               </View>

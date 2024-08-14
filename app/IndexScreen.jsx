@@ -1,7 +1,5 @@
 import React, { useEffect } from 'react'
-import { StatusBar } from 'expo-status-bar';
-import { ScrollView, Text, View, Image, Linking, Button, StyleSheet } from 'react-native';
-import { Link, Redirect, router } from 'expo-router';
+import { ScrollView, Text, View, Image, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { images } from '../constants';
 import CustomButton from '../components/CustomButton';
@@ -60,15 +58,15 @@ const IndexScreen = ({ navigation }) => {
 
           <CustomButton
             title="Daftar Sekarang"
-            handlePress={() => navigation.navigate('SignUp')}
+            handlePress={() => navigation.replace('SignUp')}
             containerStyles="w-full mt-10 bg-secondary-200"
             textStyles="font-PoppinsRegular text-xl text-white "
           />
           <CustomButton
             title="Masuk"
-            handlePress={() => navigation.navigate('SignIn')}
+            handlePress={() => navigation.replace('SignIn')}
             containerStyles="w-full mt-3 bg-primary border border-secondary-200"
-            textStyles="font-PoppinsRegular text-xl text-secondary-200"
+            textStyles="font-PoppinsRegular text-xl text-secondary-200 text-secondary-200"
           />
         </View>
       </ScrollView>

@@ -4,7 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import { ScrollView } from 'react-native'
 import { StyleSheet } from 'react-native'
 
-const TermAndCondition = () => {
+const TermAndCon = () => {
     return (
         <ScrollView style={styles.container}>
             <View style={styles.section}>
@@ -123,4 +123,4 @@ const styles = StyleSheet.create({
 });
 
 
-export default TermAndCondition
+export default TermAndCon
