@@ -20,7 +20,7 @@ const Index = () => {
   const { user } = useGlobalContext()
   const [searchQuery, setSearchQuery] = useState('');
   const [orderBy, setOrderBy] = useState('asc');
-  const [dataLocation, setDataLocation] = useState([]);
+  const [dataCustomer, setDataCustomer] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [refetchTrigger, setRefetchTrigger] = useState(0);
@@ -42,7 +42,7 @@ const Index = () => {
         if (orderBy !== '') {
           var paramOrder = `&order_by=id ${orderBy}`
         }
-        const response = await fetchData(`${API_HOST}/location/store?page=1&limit=100${keyword}${paramOrder}`,
+        const response = await fetchData(`${API_HOST}/customer/location?page=1&limit=100${keyword}${paramOrder}`,
           {
             headers: {
               'X-access-token': user.token,
@@ -54,7 +54,7 @@ const Index = () => {
 
         if (response.code) {
           if (response.code === 200) {
-            setDataLocation(response.data.rows);
+            setDataCustomer(response.data.rows);
             setIsLoading(false);
           }
         } else {
@@ -78,14 +78,14 @@ const Index = () => {
     <SafeAreaView edges={['bottom', 'left', 'right']} style={{ flex: 1 }}>
       <View className="w-full h-full justify-center px-4 bg-primary">
         <FlatList
-          data={dataLocation ?? []}
+          data={dataCustomer ?? []}
           keyExtractor={(item, index) => (item.$id ? item.$id.toString() : index.toString())}
           renderItem={({ item, index }) => (
             <TouchableOpacity
               className="border-b border-gray-200 px-1 py-3"
               onPress={() => {
-                navigation.navigate('LocationStore', {
-                  screen: 'LocationEditStoreStack',
+                navigation.navigate('Customer', {
+                  screen: 'CustomerEditStack',
                   params: { id: item.id }
                 });
               }}
@@ -96,11 +96,6 @@ const Index = () => {
                     <Text className="text-base font-PoppinsSemiBold text-blue-200 ml-1 text-lg">
                       {CapitalizeEachWord(item.name)}
                     </Text>
-                    {item.is_head_office == "YA" &&
-                      <View className="bg-yellow-100 rounded-sm w-[40px] h-4 justify-center items-center ml-2">
-                        <Text className="text-black text-xs">Pusat</Text>
-                      </View>
-                    }
                   </View>
                   <Text className="text-base text-gray-100 ml-1 text-sm">
                     {item.address} {item.phone ? `(${item.phone})` : ''}
@@ -118,7 +113,7 @@ const Index = () => {
                   orderBy={orderBy}
                   setOrderBy={setOrderBy}
                   setIsloading={setIsLoading}
-                  placeholder={'Cari Lokasi Toko'}
+                  placeholder={'Cari Pelanggan'}
                   searchStyle="w-[85%] mt-4"
                   txtId="txt002"
                   btnId="btn002"
@@ -131,7 +126,7 @@ const Index = () => {
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
         />
         <TouchableOpacity style={styles.circleButton} onPress={() =>
-          navigation.navigate('LocationStore', { screen: 'LocationCreateStack' })}>
+          navigation.navigate('Customer', { screen: 'CustomerCreateStack' })}>
           <View testID="btn003">
             <Icon name="plus" size={30} color="#fff" />
           </View>

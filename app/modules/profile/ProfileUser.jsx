@@ -264,13 +264,13 @@ const ProfileUser = () => {
                     alt="upload"
                     className="w-5 h-5"
                   />
-                  <Text className="text-sm text-gray-100 font-poppinsMedium">
+                  <Text className="text-sm text-gray-100 font-poppinsMedium" testID="btn001">
                     Pilih Gambar
                   </Text>
                 </View>
               </TouchableOpacity>
               <View className="w-[150px] bg-primary rounded-2xl ">
-                <Button title={uploading ? "Uploading..." : "Upload"} onPress={handleSubmit} isLoading={uploading} />
+                <Button title={uploading ? "Uploading..." : "Upload"} onPress={handleSubmit} isLoading={uploading} testID="btn002"/>
               </View>
             </View>
           )}
@@ -296,6 +296,7 @@ const ProfileUser = () => {
                 otherStyles="mt-0"
                 otherTextInputStyles="bg-gray-200"
                 editable={false}
+                testId="txt001"
               />
 
               <FormField
@@ -304,6 +305,7 @@ const ProfileUser = () => {
                 handleChangeText={handleChange('fullname')}
                 handleBlur={handleBlur('fullname')}
                 otherStyles="mt-3"
+                testId="txt002"
               />
               {touched.fullname && errors.fullname && <Text className="text-gray-50">{errors.fullname}</Text>}
 
@@ -314,6 +316,7 @@ const ProfileUser = () => {
                 handleBlur={handleBlur('phone')}
                 otherStyles="mt-3"
                 keyboardType="number-pad"
+                testId="txt003"
               />
               {touched.phone && errors.phone && <Text className="text-gray-50">{errors.phone}</Text>}
 
@@ -323,6 +326,7 @@ const ProfileUser = () => {
                 handleChangeText={handleChange('email')}
                 handleBlur={handleBlur('email')}
                 otherStyles="mt-3"
+                testId="txt004"
               />
               {touched.email && errors.email && <Text className="text-gray-50">{errors.email}</Text>}
 
@@ -333,6 +337,7 @@ const ProfileUser = () => {
                 handleChangeText={handleChange('affiliator_code')}
                 handleBlur={handleBlur('affiliator_code')}
                 otherStyles="mt-3"
+                testId="txt005"
               />
 
               <CustomButton
@@ -341,6 +346,7 @@ const ProfileUser = () => {
                 containerStyles={"mt-7 bg-secondary-200"}
                 textStyles="text-white"
                 isLoading={isSubmitting}
+                testId="btn003"
               />
             </View>
           )}
@@ -365,6 +371,7 @@ const ProfileUser = () => {
                 handleChangeText={handleChange('password')}
                 handleBlur={handleBlur('password')}
                 otherStyles="mt-3"
+                testId="txt006"
               />
               {touched.password && errors.password && <Text className="text-gray-50">{errors.password}</Text>}
 
@@ -374,6 +381,7 @@ const ProfileUser = () => {
                 handleChangeText={handleChange('confirm_password')}
                 handleBlur={handleBlur('confirm_password')}
                 otherStyles="mt-3"
+                testId="txt007"
               />
               {touched.confirm_password && errors.confirm_password && <Text className="text-gray-50">{errors.confirm_password}</Text>}
 
@@ -383,6 +391,7 @@ const ProfileUser = () => {
                 containerStyles={"mt-7 bg-secondary-200"}
                 textStyles="text-white"
                 isLoading={isSubmittingPassword}
+                testId="btn004"
               />
             </View>
           )}

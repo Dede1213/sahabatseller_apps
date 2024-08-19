@@ -80,8 +80,9 @@ const SignIn = ({ navigation }) => {
                   handleChangeText={handleChange('username')}
                   handleBlur={handleBlur('username')}
                   otherStyles="mt-7"
+                  testId="txt001"
                 />
-                {touched.username && errors.username && <Text className="text-gray-50">{errors.username}</Text>}
+                {touched.username && errors.username && <Text className="text-gray-50" testID='txt002'>{errors.username}</Text>}
 
                 <FormField
                   title="Password"
@@ -90,8 +91,9 @@ const SignIn = ({ navigation }) => {
                   handleChangeText={handleChange('password')}
                   handleBlur={handleBlur('password')}
                   otherStyles="mt-7"
+                  testId="txt003"
                 />
-                {touched.password && errors.password && <Text className="text-gray-50">{errors.password}</Text>}
+                {touched.password && errors.password && <Text className="text-gray-50" testID='txt004'>{errors.password}</Text>}
 
                 <CustomButton
                   title="Masuk"
@@ -99,6 +101,7 @@ const SignIn = ({ navigation }) => {
                   containerStyles={"mt-7 bg-secondary-200 "}
                   textStyles="text-white"
                   isLoading={isSubmitting}
+                  testId="btn001"
                 />
               </View>
             )}
@@ -107,7 +110,7 @@ const SignIn = ({ navigation }) => {
           <View className="flex-row justify-center pt-5 gap-2">
             <Text className="text-lg font-PoppinsRegular text-gray-100">Belum punya akun ? </Text>
             <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>
-              <Text className="text-secondary-200 font-PoppinsSemiBold text-lg">Daftar</Text>
+              <Text className="text-secondary-200 font-PoppinsSemiBold text-lg" testID='txt005'>Daftar</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => navigation.navigate('PrintExample')}>
               <Text className="text-secondary-200 font-PoppinsSemiBold text-lg"> | Print</Text>

@@ -19,6 +19,13 @@ module.exports = {
           50: "#7b7b8b",
           100: "#494952",
         },
+        yellow: {
+          100: "#fbd405",
+        },
+        blue: {
+          100: "#48a7f6",
+          200: "#1a7dcf",
+        }
       },
       fontFamily: {
         pthin: ["Poppins-Thin", "sans-serif"],

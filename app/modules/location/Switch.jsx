@@ -25,7 +25,7 @@ const Switch = () => {
   useEffect(() => {
     const getData = async () => {
       try {
-        const response = await fetchData(`${API_HOST}/location/store?page=1&limit=100`,
+        const response = await fetchData(`${API_HOST}/location/store/list`,
           {
             headers: {
               'X-access-token': user.token,
@@ -37,13 +37,11 @@ const Switch = () => {
 
         if (response.code) {
           if (response.code === 200) {
-
-            const formattedData = response.data.rows.map(item => ({
+            const formattedData = response.data.map(item => ({
               label: item.name,
               value: item.id,
             }));
             setLocation(formattedData);
-
           }
         } else {
           Alert.alert(response.message)
@@ -66,16 +64,15 @@ const Switch = () => {
           'Accept': 'application/json',
         },
         data: {
-          location_id: user.location_id,
+          location_id: form.location_id,
         },
       });
 
       if (response.code) {
         if (response.code === 200) {
-          console.log(response)
+          await SecureStore.deleteItemAsync('userToken');
           await SecureStore.setItemAsync('userToken', response.data.token);
-          let x = location.find(item => item.value == form.location_id);
-          setUser(prev => ({ ...prev, location_id: form.location_id, location_name: x.label }));
+          setUser(prev => ({ ...prev,token: response.data.token, location_id: response.data.location_id, location_name: response.data.location_name, is_head_office: response.data.is_head_office }));
           Alert.alert('Notifikasi', 'Lokasi toko anda berhasil diubah.')
         }
       } else {

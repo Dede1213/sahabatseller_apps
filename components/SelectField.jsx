@@ -6,7 +6,7 @@ import { TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 
-const SelectField = ({ title, data, value, onValueChange, otherStyles, placeholder, handleChangeText, handleBlur, info }) => {
+const SelectField = ({ title, data, value, onValueChange, otherStyles, placeholder, handleChangeText, handleBlur, info, dropdownPosition, testId }) => {
     const [isFocus, setIsFocus] = useState(false);
     return (
         <View className={`space-y-2 ${otherStyles}`}>
@@ -22,6 +22,8 @@ const SelectField = ({ title, data, value, onValueChange, otherStyles, placehold
             <View>
 
                 <Dropdown
+                    testID={testId ? testId : ''}
+                    dropdownPosition={dropdownPosition ? dropdownPosition : "bottom"}
                     style={[styles.dropdown, isFocus && { borderColor: '#1a7dcf' }]}
                     placeholderStyle={styles.placeholderStyle}
                     selectedTextStyle={styles.selectedTextStyle}

@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import { icons } from '../constants'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-const SearchInput = ({ searchQuery, setSearchQuery, orderBy, setOrderBy, placeholder, setIsloading, searchStyle }) => {
+const SearchInput = ({ searchQuery, setSearchQuery, orderBy, setOrderBy, filter, setFilter, placeholder, setIsloading, searchStyle, txtId, btnId }) => {
     const [inputText, setInputText] = useState('');
     const handleSubmit = () => {
         setIsloading(true);
@@ -19,6 +19,7 @@ const SearchInput = ({ searchQuery, setSearchQuery, orderBy, setOrderBy, placeho
                     placeholderTextColor="#CDCDE0"
                     onChangeText={setInputText}
                     onSubmitEditing={handleSubmit}
+                    testID={txtId ? txtId : ''}
                 />
 
                 <TouchableOpacity
@@ -26,7 +27,7 @@ const SearchInput = ({ searchQuery, setSearchQuery, orderBy, setOrderBy, placeho
                         handleSubmit();
                     }}
                 >
-                    <View className="flex-row items-center justify-center">
+                    <View className="flex-row items-center justify-center" testID={btnId ? btnId : ''}>
                         <Image
                             source={icons.search}
                             className="w-5 h-5 ml-2"
@@ -35,7 +36,7 @@ const SearchInput = ({ searchQuery, setSearchQuery, orderBy, setOrderBy, placeho
                     </View>
                 </TouchableOpacity>
             </View>
-            {orderBy && <TouchableOpacity
+            {orderBy && !filter && <TouchableOpacity
                 onPress={() => {
                     setIsloading(true);
                     if (orderBy === 'asc') {
@@ -45,8 +46,23 @@ const SearchInput = ({ searchQuery, setSearchQuery, orderBy, setOrderBy, placeho
                     }
                 }}
             >
-                <View className="flex-row items-center justify-center ml-3">
-                    <Icon name={orderBy==='asc' ? 'sort-ascending' : 'sort-descending'} color="#1a7dcf" size={40} />
+                <View className="flex-row items-center justify-center ml-3 mt-4">
+                    <Icon name={orderBy==='asc' ? 'sort-ascending' : 'sort-descending'} color="#1a7dcf" size={35} />
+                </View>
+            </TouchableOpacity>}
+
+            {filter && <TouchableOpacity
+                onPress={() => {
+                    setIsloading(true);
+                    if (orderBy === 'asc') {
+                        setOrderBy('desc');
+                    } else {
+                        setOrderBy('asc');
+                    }
+                }}
+            >
+                <View className="flex-row items-center justify-center ml-3 mt-4">
+                    <Icon name="filter-menu-outline" color="#1a7dcf" size={35} />
                 </View>
             </TouchableOpacity>}
 

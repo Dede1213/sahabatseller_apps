@@ -1,4 +1,4 @@
-import { Text, View, Alert, StyleSheet, FlatList, TouchableOpacity } from 'react-native'
+import { Text, View, Alert, StyleSheet, FlatList, TouchableOpacity, Image } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { useGlobalContext } from '../../../context/globalProvider'
 import { fetchData } from '../../../lib/fetchData'
@@ -14,13 +14,13 @@ import { useNavigation } from '@react-navigation/native';
 import { useIsFocused } from '@react-navigation/native';
 import { CapitalizeEachWord } from '../../../lib/globalFunction';
 
-const Index = () => {
+const Employee = () => {
   const navigation = useNavigation();
   const isFocused = useIsFocused();
   const { user } = useGlobalContext()
   const [searchQuery, setSearchQuery] = useState('');
   const [orderBy, setOrderBy] = useState('asc');
-  const [dataLocation, setDataLocation] = useState([]);
+  const [dataEmployee, setDataEmployee] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [refetchTrigger, setRefetchTrigger] = useState(0);
@@ -42,7 +42,7 @@ const Index = () => {
         if (orderBy !== '') {
           var paramOrder = `&order_by=id ${orderBy}`
         }
-        const response = await fetchData(`${API_HOST}/location/store?page=1&limit=100${keyword}${paramOrder}`,
+        const response = await fetchData(`${API_HOST}/user/store?page=1&limit=100${keyword}${paramOrder}`,
           {
             headers: {
               'X-access-token': user.token,
@@ -54,7 +54,7 @@ const Index = () => {
 
         if (response.code) {
           if (response.code === 200) {
-            setDataLocation(response.data.rows);
+            setDataEmployee(response.data.rows);
             setIsLoading(false);
           }
         } else {
@@ -78,32 +78,34 @@ const Index = () => {
     <SafeAreaView edges={['bottom', 'left', 'right']} style={{ flex: 1 }}>
       <View className="w-full h-full justify-center px-4 bg-primary">
         <FlatList
-          data={dataLocation ?? []}
+          data={dataEmployee ?? []}
           keyExtractor={(item, index) => (item.$id ? item.$id.toString() : index.toString())}
           renderItem={({ item, index }) => (
             <TouchableOpacity
               className="border-b border-gray-200 px-1 py-3"
               onPress={() => {
-                navigation.navigate('LocationStore', {
-                  screen: 'LocationEditStoreStack',
+                navigation.navigate('Employee', {
+                  screen: 'EmployeeEditStack',
                   params: { id: item.id }
                 });
               }}
             >
               <View className="flex-row items-center" testID={`item-${index}`} >
+                <Image source={{ uri: item.photo ? `${API_HOST}/profile/images/${item.photo}` : `${API_HOST}/profile/images/default.png` }} className="w-16 h-16 rounded-full " />
                 <View>
                   <View className="flex-row items-center">
-                    <Text className="text-base font-PoppinsSemiBold text-blue-200 ml-1 text-lg">
-                      {CapitalizeEachWord(item.name)}
+                    <Text className="text-base font-PoppinsSemiBold text-blue-200 ml-3 text-lg">
+                      {CapitalizeEachWord(item.fullname)}
                     </Text>
-                    {item.is_head_office == "YA" &&
-                      <View className="bg-yellow-100 rounded-sm w-[40px] h-4 justify-center items-center ml-2">
-                        <Text className="text-black text-xs">Pusat</Text>
-                      </View>
-                    }
                   </View>
-                  <Text className="text-base text-gray-100 ml-1 text-sm">
-                    {item.address} {item.phone ? `(${item.phone})` : ''}
+                  <Text className="text-base text-gray-100 ml-3 text-sm">
+                    {item.location_name} - {item.role_title}
+                  </Text>
+                  <Text className="text-base text-gray-100 ml-3 text-sm">
+                    {item.email}
+                  </Text>
+                  <Text className="text-base text-gray-100 ml-3 text-sm">
+                    {item.phone}
                   </Text>
                 </View>
               </View>
@@ -118,9 +120,9 @@ const Index = () => {
                   orderBy={orderBy}
                   setOrderBy={setOrderBy}
                   setIsloading={setIsLoading}
-                  placeholder={'Cari Lokasi Toko'}
+                  placeholder={'Cari Data Pegawai'}
                   searchStyle="w-[85%] mt-4"
-                  txtId="txt002"
+                  textId="txt002"
                   btnId="btn002"
                 />
               </View>
@@ -131,8 +133,8 @@ const Index = () => {
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
         />
         <TouchableOpacity style={styles.circleButton} onPress={() =>
-          navigation.navigate('LocationStore', { screen: 'LocationCreateStack' })}>
-          <View testID="btn003">
+          navigation.navigate('Employee', { screen: 'EmployeeAddStack' })}>
+          <View testID="btn001">
             <Icon name="plus" size={30} color="#fff" />
           </View>
         </TouchableOpacity>
@@ -141,7 +143,7 @@ const Index = () => {
   )
 }
 
-export default Index
+export default Employee
 
 const styles = StyleSheet.create({
   circleButton: {

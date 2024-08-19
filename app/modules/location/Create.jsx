@@ -12,7 +12,7 @@ import { useNavigation } from '@react-navigation/native'
 const validationSchema = Yup.object().shape({
   name: Yup.string().required('*nama toko wajib diisi'),
   address: Yup.string().required('*alamat toko wajib diisi'),
-  phone: Yup.string().required('*nomor telepon toko wajib diisi'),
+  phone: Yup.string().min(10, '*nomor handphone minimal 10 angka').required('*nomor handphone wajib diisi'),
 });
 
 const Create = () => {
@@ -77,6 +77,7 @@ const Create = () => {
                 handleChangeText={handleChange('name')}
                 handleBlur={handleBlur('name')}
                 otherStyles="mt-0"
+                testId="txt001"
               />
               {touched.name && errors.name && <Text className="text-gray-50">{errors.name}</Text>}
 
@@ -86,6 +87,7 @@ const Create = () => {
                 handleChangeText={handleChange('address')}
                 handleBlur={handleBlur('address')}
                 otherStyles="mt-2"
+                testId="txt002"
               />
               {touched.address && errors.address && <Text className="text-gray-50">{errors.address}</Text>}
 
@@ -95,6 +97,7 @@ const Create = () => {
                 handleChangeText={handleChange('phone')}
                 handleBlur={handleBlur('phone')}
                 otherStyles="mt-2"
+                testId="txt003"
               />
               {touched.phone && errors.phone && <Text className="text-gray-50">{errors.phone}</Text>}
 
@@ -104,6 +107,7 @@ const Create = () => {
                 containerStyles={"mt-7 bg-secondary-200"}
                 textStyles="text-white"
                 isLoading={isSubmitting}
+                testId="btn001"
               />
             </View>
           )}

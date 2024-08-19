@@ -93,8 +93,9 @@ const SignUp = ({ navigation }) => {
                   handleChangeText={handleChange('fullname')}
                   handleBlur={handleBlur('fullname')}
                   otherStyles="mt-2"
+                  testId="txt001"
                 />
-                {touched.fullname && errors.fullname && <Text className="text-gray-50">{errors.fullname}</Text>}
+                {touched.fullname && errors.fullname && <Text className="text-gray-50" testID='txt002'>{errors.fullname}</Text>}
 
                 <FormField
                   title="Nomor Telepon"
@@ -103,8 +104,9 @@ const SignUp = ({ navigation }) => {
                   handleBlur={handleBlur('phone')}
                   otherStyles="mt-3"
                   keyboardType="number-pad"
+                  testId="txt003"
                 />
-                {touched.phone && errors.phone && <Text className="text-gray-50">{errors.phone}</Text>}
+                {touched.phone && errors.phone && <Text className="text-gray-50" testID='txt004'>{errors.phone}</Text>}
 
                 <FormField
                   title="Email"
@@ -112,8 +114,9 @@ const SignUp = ({ navigation }) => {
                   handleChangeText={handleChange('email')}
                   handleBlur={handleBlur('email')}
                   otherStyles="mt-3"
+                  testId="txt005"
                 />
-                {touched.email && errors.email && <Text className="text-gray-50">{errors.email}</Text>}
+                {touched.email && errors.email && <Text className="text-gray-50" testID='txt006'>{errors.email}</Text>}
 
                 <FormField
                   title="Password"
@@ -121,8 +124,9 @@ const SignUp = ({ navigation }) => {
                   handleChangeText={handleChange('password')}
                   handleBlur={handleBlur('password')}
                   otherStyles="mt-3"
+                  testId="txt007"
                 />
-                {touched.password && errors.password && <Text className="text-gray-50">{errors.password}</Text>}
+                {touched.password && errors.password && <Text className="text-gray-50" testID='txt008'>{errors.password}</Text>}
 
 
                 <FormField
@@ -131,8 +135,9 @@ const SignUp = ({ navigation }) => {
                   handleChangeText={handleChange('store_name')}
                   handleBlur={handleBlur('store_name')}
                   otherStyles="mt-3"
+                  testId="txt009"
                 />
-                {touched.store_name && errors.store_name && <Text className="text-gray-50">{errors.store_name}</Text>}
+                {touched.store_name && errors.store_name && <Text className="text-gray-50" testID='txt010'>{errors.store_name}</Text>}
 
                 <FormField
                   title="Alamat Toko"
@@ -140,8 +145,9 @@ const SignUp = ({ navigation }) => {
                   handleChangeText={handleChange('store_address')}
                   handleBlur={handleBlur('store_address')}
                   otherStyles="mt-3"
+                  testId="txt011"
                 />
-                {touched.store_address && errors.store_address && <Text className="text-gray-50">{errors.store_address}</Text>}
+                {touched.store_address && errors.store_address && <Text className="text-gray-50" testID='txt012'>{errors.store_address}</Text>}
 
                 <FormField
                   title="Kode Affiliator"
@@ -149,8 +155,9 @@ const SignUp = ({ navigation }) => {
                   handleChangeText={handleChange('affiliator_id')}
                   handleBlur={handleBlur('affiliator_id')}
                   otherStyles="mt-3"
+                  testId="txt013"
                 />
-                {touched.affiliator_id && errors.affiliator_id && <Text className="text-gray-50">{errors.affiliator_id}</Text>}
+                {touched.affiliator_id && errors.affiliator_id && <Text className="text-gray-50" testID='txt014'>{errors.affiliator_id}</Text>}
 
                 <CustomButton
                   title="Daftar"
@@ -158,6 +165,7 @@ const SignUp = ({ navigation }) => {
                   containerStyles={"mt-7 bg-secondary-200"}
                   textStyles="text-white"
                   isLoading={isSubmitting}
+                  testId="btn001"
                 />
               </View>
             )}
@@ -166,7 +174,7 @@ const SignUp = ({ navigation }) => {
           <View className="flex-row justify-center pt-5 gap-2">
             <Text className="text-lg font-PoppinsRegular text-gray-100">sudah punya akun? </Text>
             <TouchableOpacity onPress={() => navigation.navigate('SignIn')}>
-              <Text className="text-secondary-200 font-PoppinsSemiBold text-lg">Masuk</Text>
+              <Text className="text-secondary-200 font-PoppinsSemiBold text-lg" testID="btn002">Masuk</Text>
             </TouchableOpacity>
           </View>
         </View>

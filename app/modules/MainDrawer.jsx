@@ -10,17 +10,47 @@ import ProfileUser from './profile/ProfileUser';
 import Privacy from './profile/Privacy';
 import TermAndCondition from './profile/TermAndCon';
 import ProfileStore from './profile/ProfileStore';
+import IndexProfile from './profile/Index';
 
 import CreateLocation from './location/Create';
 import IndexLocation from './location/Index';
 import Switch from './location/Switch';
-import IndexProfile from './profile/Index';
 import EditLocation from './location/Edit';
 
+import CreateCustomer from './customer/Create';
+import IndexCustomer from './customer/Index';
+import EditCustomer from './customer/Edit';
+
+import IndexCashFlow from './cashflow/Index';
+import ViewCashFlow from './cashflow/cashflow/Index';
+import CreateCashFlow from './cashflow/cashflow/Create';
+import EditCashFlow from './cashflow/cashflow/Edit';
+import ViewCatFlow from './cashflow/category/Index';
+import CreateCatFlow from './cashflow/category/Create';
+import EditCatFlow from './cashflow/category/Edit';
+
 import EmployeeIndex from './employee/Index';
+import EmployeeView from './employee/Employee';
+import EmployeeAdd from './employee/EmployeeAdd';
+import EmployeeEdit from './employee/EmployeeEdit';
+import RoleView from './employee/Role';
+import RoleAdd from './employee/RoleAdd';
+import RoleEdit from './employee/RoleEdit';
+
+const CustomHeaderLeft = ({ onPress }) => (
+  <TouchableOpacity onPress={onPress} className="ml-2">
+    <Icon name="menu" color="#000" size={25} testID="open-drawer-button" />
+  </TouchableOpacity>
+);
+
+const CustomHeaderLeftBack = ({ onPress }) => (
+  <TouchableOpacity onPress={onPress} className="ml-2">
+    <Icon name="arrow-left" color="#000" size={25} testID="menu-back-button" />
+  </TouchableOpacity>
+);
+
 
 const HomeScreen = () => {
-  // const { user } = useGlobalContext();
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <Text>Home Screen</Text>
@@ -33,11 +63,19 @@ const HomeStack = createStackNavigator();
 const ProfileStack = createStackNavigator();
 const LocationStoreStack = createStackNavigator();
 const EmployeeStack = createStackNavigator();
+const CustomerStack = createStackNavigator();
+const CashFlowStack = createStackNavigator();
 
 function HomeStackNavigator() {
   return (
     <HomeStack.Navigator>
-      <HomeStack.Screen name="HomeStack" component={HomeScreen} options={{ headerShown: false }} />
+      <HomeStack.Screen name="HomeStack" component={HomeScreen}
+        options={({ navigation }) => ({
+          headerShown: true,
+          headerLeft: () => <CustomHeaderLeft onPress={() => navigation.openDrawer()} />,
+          headerTitle: 'Beranda',
+        })}
+      />
     </HomeStack.Navigator>
   );
 }
@@ -49,19 +87,41 @@ function ProfileStackNavigator({ navigation }) {
         headerStyle: styles.borderBottomStyle,
       }}
     >
-      <ProfileStack.Screen name="ProfileStack" component={IndexProfile} options={{
-        headerShown: true,
-        headerLeft: () => (
-          <TouchableOpacity onPress={() => navigation.goBack()} style={{ marginLeft: 10 }}>
-            <Icon name="arrow-left" color="#000" size={25} />
-          </TouchableOpacity>
-        ),
-        headerTitle: 'Profil',
-      }} />
-      <ProfileStack.Screen name="ProfileUserStack" component={ProfileUser} options={{ headerShown: true, headerTitle: 'Profil Pengguna' }} />
-      <ProfileStack.Screen name="ProfileStoreStack" component={ProfileStore} options={{ headerShown: true, headerTitle: 'Profil Toko' }} />
-      <ProfileStack.Screen name="Privacy" component={Privacy} options={{ headerShown: true, headerTitle: 'Privasi' }} />
-      <ProfileStack.Screen name="TermAndCondition" component={TermAndCondition} options={{ headerShown: true, headerTitle: 'Syarat dan Ketentuan' }} />
+      <ProfileStack.Screen name="ProfileStack" component={IndexProfile}
+        options={({ navigation }) => ({
+          headerShown: true,
+          headerLeft: () => <CustomHeaderLeft onPress={() => navigation.openDrawer()} />,
+          headerTitle: 'Profil',
+        })}
+      />
+      <ProfileStack.Screen name="ProfileUserStack" component={ProfileUser}
+        options={({ navigation }) => ({
+          headerShown: true,
+          headerLeft: () => <CustomHeaderLeftBack onPress={() => navigation.popToTop()} />,
+          headerTitle: 'Profil Pengguna',
+        })}
+      />
+      <ProfileStack.Screen name="ProfileStoreStack" component={ProfileStore}
+        options={({ navigation }) => ({
+          headerShown: true,
+          headerLeft: () => <CustomHeaderLeftBack onPress={() => navigation.popToTop()} />,
+          headerTitle: 'Profil Toko',
+        })}
+      />
+      <ProfileStack.Screen name="Privacy" component={Privacy}
+        options={({ navigation }) => ({
+          headerShown: true,
+          headerLeft: () => <CustomHeaderLeftBack onPress={() => navigation.popToTop()} />,
+          headerTitle: 'Privasi',
+        })}
+      />
+      <ProfileStack.Screen name="TermAndCondition" component={TermAndCondition}
+        options={({ navigation }) => ({
+          headerShown: true,
+          headerLeft: () => <CustomHeaderLeftBack onPress={() => navigation.popToTop()} />,
+          headerTitle: 'Syarat dan Ketentuan',
+        })}
+      />
     </ProfileStack.Navigator>
   );
 }
@@ -73,26 +133,34 @@ function LocationStoreStackNavigator({ navigation }) {
         headerStyle: styles.borderBottomStyle,
       }}
     >
-      <LocationStoreStack.Screen name="LocationStoreStack" component={IndexLocation} options={{
-        headerShown: true,
-        headerLeft: () => (
-          <TouchableOpacity onPress={() => navigation.goBack()} style={{ marginLeft: 10 }}>
-            <Icon name="arrow-left" color="#000" size={25} />
-          </TouchableOpacity>
-        ),
-        headerTitle: 'Lokasi',
-      }} />
-      <LocationStoreStack.Screen name="SwitchLocationStack" component={Switch} options={{
-        headerShown: true,
-        headerLeft: () => (
-          <TouchableOpacity onPress={() => navigation.goBack()} style={{ marginLeft: 10 }}>
-            <Icon name="arrow-left" color="#000" size={25} />
-          </TouchableOpacity>
-        ),
-        headerTitle: 'Pilih Lokasi',
-      }} />
-      <LocationStoreStack.Screen name="LocationCreateStack" component={CreateLocation} options={{ headerShown: true, headerTitle: 'Tambah Lokasi' }} />
-      <LocationStoreStack.Screen name="LocationEditStoreStack" component={EditLocation} options={{ headerShown: true, headerTitle: 'Ubah Lokasi' }} />
+      <LocationStoreStack.Screen name="LocationStoreStack" component={IndexLocation}
+        options={{
+          headerShown: true,
+          headerLeft: () => <CustomHeaderLeft onPress={() => navigation.openDrawer()} />,
+          headerTitle: 'Lokasi',
+        }}
+      />
+      <LocationStoreStack.Screen name="SwitchLocationStack" component={Switch}
+        options={{
+          headerShown: true,
+          headerLeft: () => <CustomHeaderLeft onPress={() => navigation.openDrawer()} />,
+          headerTitle: 'Pilih Lokasi',
+        }}
+      />
+      <LocationStoreStack.Screen name="LocationCreateStack" component={CreateLocation}
+        options={{
+          headerShown: true,
+          headerLeft: () => <CustomHeaderLeftBack onPress={() => navigation.popToTop()} />,
+          headerTitle: 'Tambah Lokasi',
+        }}
+      />
+      <LocationStoreStack.Screen name="LocationEditStoreStack" component={EditLocation}
+        options={{
+          headerShown: true,
+          headerLeft: () => <CustomHeaderLeftBack onPress={() => navigation.popToTop()} />,
+          headerTitle: 'Ubah Lokasi',
+        }}
+      />
     </LocationStoreStack.Navigator>
   );
 }
@@ -106,17 +174,149 @@ function EmployeeStackNavigator({ navigation }) {
     >
       <EmployeeStack.Screen name="EmployeeStack" component={EmployeeIndex} options={{
         headerShown: true,
-        headerLeft: () => (
-          <TouchableOpacity onPress={() => navigation.goBack()} style={{ marginLeft: 10 }}>
-            <Icon name="arrow-left" color="#000" size={25} />
-          </TouchableOpacity>
-        ),
+        headerLeft: () => <CustomHeaderLeft onPress={() => navigation.openDrawer()} />,
         headerTitle: 'Pegawai',
       }} />
-      {/* <LocationStoreStack.Screen name="LocationEditStoreStack" component={EditLocation} options={{ headerShown: true, headerTitle: 'Ubah Lokasi' }} /> */}
+      <EmployeeStack.Screen name="EmployeeViewStack" component={EmployeeView}
+        options={{
+          headerShown: true,
+          headerLeft: () => <CustomHeaderLeftBack onPress={() => navigation.popToTop()} />,
+          headerTitle: 'Pegawai',
+        }}
+      />
+      <EmployeeStack.Screen name="EmployeeAddStack" component={EmployeeAdd}
+        options={{
+          headerShown: true,
+          headerLeft: () => <CustomHeaderLeftBack onPress={() => navigation.popToTop()} />,
+          headerTitle: 'Tambah Pegawai',
+        }}
+      />
+      <EmployeeStack.Screen name="EmployeeEditStack" component={EmployeeEdit}
+        options={{
+          headerShown: true,
+          headerLeft: () => <CustomHeaderLeftBack onPress={() => navigation.popToTop()} />,
+          headerTitle: 'Ubah Pegawai',
+        }}
+      />
+      <EmployeeStack.Screen name="RoleViewStack" component={RoleView}
+        options={{
+          headerShown: true,
+          headerLeft: () => <CustomHeaderLeftBack onPress={() => navigation.popToTop()} />,
+          headerTitle: 'Hak Akses',
+        }}
+      />
+      <EmployeeStack.Screen name="RoleAddStack" component={RoleAdd}
+        options={{
+          headerShown: true,
+          headerLeft: () => <CustomHeaderLeftBack onPress={() => navigation.popToTop()} />,
+          headerTitle: 'Tambah Hak Akses',
+        }}
+      />
+      <EmployeeStack.Screen name="RoleEditStack" component={RoleEdit}
+        options={{
+          headerShown: true,
+          headerLeft: () => <CustomHeaderLeftBack onPress={() => navigation.popToTop()} />,
+          headerTitle: 'Ubah Hak Akses',
+        }}
+      />
     </EmployeeStack.Navigator>
+
   );
 }
+
+function CustomerStackNavigator({ navigation }) {
+  return (
+    <CustomerStack.Navigator
+      screenOptions={{
+        headerStyle: styles.borderBottomStyle,
+      }}
+    >
+      <CustomerStack.Screen name="CustomerStack" component={IndexCustomer}
+        options={{
+          headerShown: true,
+          headerLeft: () => <CustomHeaderLeft onPress={() => navigation.openDrawer()} />,
+          headerTitle: 'Pelanggan',
+        }}
+      />
+      <CustomerStack.Screen name="CustomerCreateStack" component={CreateCustomer}
+        options={{
+          headerShown: true,
+          headerLeft: () => <CustomHeaderLeftBack onPress={() => navigation.popToTop()} />,
+          headerTitle: 'Tambah Pelanggan',
+        }}
+      />
+      <CustomerStack.Screen name="CustomerEditStack" component={EditCustomer}
+        options={{
+          headerShown: true,
+          headerLeft: () => <CustomHeaderLeftBack onPress={() => navigation.popToTop()} />,
+          headerTitle: 'Ubah Pelanggan',
+        }}
+      />
+    </CustomerStack.Navigator>
+  );
+}
+
+function CashFlowStackNavigator({ navigation }) {
+  return (
+    <CashFlowStack.Navigator
+      screenOptions={{
+        headerStyle: styles.borderBottomStyle,
+      }}
+    >
+      <CashFlowStack.Screen name="CashFlowStack" component={IndexCashFlow}
+        options={{
+          headerShown: true,
+          headerLeft: () => <CustomHeaderLeft onPress={() => navigation.openDrawer()} />,
+          headerTitle: 'Arus Kas',
+        }}
+      />
+      <CashFlowStack.Screen name="CashFlowViewStack" component={ViewCashFlow}
+        options={{
+          headerShown: true,
+          headerLeft: () => <CustomHeaderLeftBack onPress={() => navigation.popToTop()} />,
+          headerTitle: 'Arus Kas',
+        }}
+      />
+      <CashFlowStack.Screen name="CashFlowCreateStack" component={CreateCashFlow}
+        options={{
+          headerShown: true,
+          headerLeft: () => <CustomHeaderLeftBack onPress={() => navigation.popToTop()} />,
+          headerTitle: 'Tambah Arus Kas',
+        }}
+      />
+      <CashFlowStack.Screen name="CashFlowEditStack" component={EditCashFlow}
+        options={{
+          headerShown: true,
+          headerLeft: () => <CustomHeaderLeftBack onPress={() => navigation.popToTop()} />,
+          headerTitle: 'Ubah Arus Kas',
+        }}
+      />
+      <CashFlowStack.Screen name="CatFlowViewStack" component={ViewCatFlow}
+        options={{
+          headerShown: true,
+          headerLeft: () => <CustomHeaderLeftBack onPress={() => navigation.popToTop()} />,
+          headerTitle: 'Kategori Arus Kas',
+        }}
+      />
+      <CashFlowStack.Screen name="CatFlowCreateStack" component={CreateCatFlow}
+        options={{
+          headerShown: true,
+          headerLeft: () => <CustomHeaderLeftBack onPress={() => navigation.popToTop()} />,
+          headerTitle: 'Tambah Kategori Arus Kas',
+        }}
+      />
+      <CashFlowStack.Screen name="CatFlowEditStack" component={EditCatFlow}
+        options={{
+          headerShown: true,
+          headerLeft: () => <CustomHeaderLeftBack onPress={() => navigation.popToTop()} />,
+          headerTitle: 'Ubah Kategori Arus Kas',
+        }}
+      />
+    </CashFlowStack.Navigator>
+  );
+}
+
+
 
 const Drawer = createDrawerNavigator();
 const MainDrawer = () => {
@@ -127,10 +327,12 @@ const MainDrawer = () => {
           headerStyle: styles.borderBottomStyle,
         }}
       >
-        <Drawer.Screen name="Home" component={HomeStackNavigator} options={{ title: 'Beranda', headerShown: true }} />
+        <Drawer.Screen name="Home" component={HomeStackNavigator} options={{ title: 'Beranda', headerShown: false }} />
         <Drawer.Screen name="Profile" component={ProfileStackNavigator} options={{ title: 'Profile', headerShown: false }} />
         <Drawer.Screen name="LocationStore" component={LocationStoreStackNavigator} options={{ title: 'Lokasi', headerShown: false }} />
         <Drawer.Screen name="Employee" component={EmployeeStackNavigator} options={{ title: 'Lokasi', headerShown: false }} />
+        <Drawer.Screen name="Customer" component={CustomerStackNavigator} options={{ title: 'Pelanggan', headerShown: false }} />
+        <Drawer.Screen name="CashFlow" component={CashFlowStackNavigator} options={{ title: 'Arus Kas', headerShown: false }} />
       </Drawer.Navigator>
       <StatusBar backgroundColor='#fff' className="dark" style="light" />
     </>

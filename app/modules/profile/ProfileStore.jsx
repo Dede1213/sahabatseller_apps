@@ -38,7 +38,7 @@ const ProfileStore = () => {
   useEffect(() => {
     const getDataStoreType = async () => {
       try {
-        const response = await fetchData(`${API_HOST}/type/store`,
+        const response = await fetchData(`${API_HOST}/store/type/list`,
           {
             headers: {
               'X-access-token': user.token,
@@ -225,13 +225,13 @@ const ProfileStore = () => {
                     alt="upload"
                     className="w-5 h-5"
                   />
-                  <Text className="text-sm text-gray-100 font-poppinsMedium">
+                  <Text className="text-sm text-gray-100 font-poppinsMedium" testID="btn001">
                     Pilih Logo
                   </Text>
                 </View>
               </TouchableOpacity>
               <View className="w-[150px] bg-primary rounded-2xl ">
-                <Button title={uploading ? "Uploading..." : "Upload"} onPress={handleSubmit} isLoading={uploading} />
+                <Button title={uploading ? "Uploading..." : "Upload"} onPress={handleSubmit} isLoading={uploading} testID="btn002"/>
               </View>
             </View>
           )}
@@ -256,6 +256,7 @@ const ProfileStore = () => {
                 handleChangeText={handleChange('name')}
                 handleBlur={handleBlur('name')}
                 otherStyles="mt-0"
+                testId="txt001"
               />
               {touched.name && errors.name && <Text className="text-gray-50">{errors.name}</Text>}
 
@@ -268,6 +269,7 @@ const ProfileStore = () => {
                 handleBlur={handleBlur('type_id')}
                 placeholder="Pilih Tipe Toko"
                 otherStyles="mt-3"
+                testId="txt002"
               />
               {touched.type_id && errors.type_id && <Text className="text-gray-50">{errors.type_id}</Text>}
 
@@ -281,6 +283,7 @@ const ProfileStore = () => {
                 handleBlur={handleBlur('tax_count')}
                 placeholder="Pilih"
                 otherStyles="mt-3 w-[200px]"
+                testId="txt003"
               />
 
               <View className="flex-row items-center">
@@ -292,6 +295,7 @@ const ProfileStore = () => {
                   handleBlur={handleBlur('margin_percentage')}
                   otherStyles="mt-3 w-[200px]"
                   keyboardType="numeric"
+                  testId="txt004"
                 />
                 <Text className="text-gray-100 text-2xl mt-10 ml-2">%</Text>
               </View>
@@ -302,6 +306,7 @@ const ProfileStore = () => {
                 containerStyles={"mt-7 bg-secondary-200"}
                 textStyles="text-white"
                 isLoading={isSubmitting}
+                testId="btn003"
               />
             </View>
           )}

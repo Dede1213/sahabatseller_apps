@@ -1,7 +1,7 @@
 import { TouchableOpacity, Text } from 'react-native'
 import React from 'react'
 
-const CustomButton = ({ title, handlePress, containerStyles, textStyles, isLoading }) => {
+const CustomButton = ({ title, handlePress, containerStyles, textStyles, isLoading, testId }) => {
     return (
         <TouchableOpacity
             onPress={handlePress}
@@ -9,7 +9,7 @@ const CustomButton = ({ title, handlePress, containerStyles, textStyles, isLoadi
             className={`rounded-[25px] min-h-[48px] justify-center items-center ${containerStyles} ${isLoading ? 'opacity-50' : ''}`}
             disabled={isLoading}
         >
-            <Text className={`font-PoppinsRegular text-xl ${textStyles}`}>
+            <Text className={`font-PoppinsRegular text-xl ${textStyles}`} testID={testId ? testId : ''}>
                 {isLoading ? 'Loading...' : title}
             </Text>
         </TouchableOpacity>

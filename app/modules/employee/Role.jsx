@@ -14,7 +14,7 @@ import { useNavigation } from '@react-navigation/native';
 import { useIsFocused } from '@react-navigation/native';
 import { CapitalizeEachWord } from '../../../lib/globalFunction';
 
-const Index = () => {
+const Role = () => {
   const navigation = useNavigation();
   const isFocused = useIsFocused();
   const { user } = useGlobalContext()
@@ -42,7 +42,7 @@ const Index = () => {
         if (orderBy !== '') {
           var paramOrder = `&order_by=id ${orderBy}`
         }
-        const response = await fetchData(`${API_HOST}/location/store?page=1&limit=100${keyword}${paramOrder}`,
+        const response = await fetchData(`${API_HOST}/roles/store?page=1&limit=100${keyword}${paramOrder}`,
           {
             headers: {
               'X-access-token': user.token,
@@ -84,27 +84,20 @@ const Index = () => {
             <TouchableOpacity
               className="border-b border-gray-200 px-1 py-3"
               onPress={() => {
-                navigation.navigate('LocationStore', {
-                  screen: 'LocationEditStoreStack',
+                navigation.navigate('Employee', {
+                  screen: 'RoleEditStack',
                   params: { id: item.id }
                 });
               }}
             >
               <View className="flex-row items-center" testID={`item-${index}`} >
+                {/* <Icon name={'account-lock-outline'} color="gray-100" size={35} /> */}
                 <View>
                   <View className="flex-row items-center">
                     <Text className="text-base font-PoppinsSemiBold text-blue-200 ml-1 text-lg">
-                      {CapitalizeEachWord(item.name)}
+                      {CapitalizeEachWord(item.title)}
                     </Text>
-                    {item.is_head_office == "YA" &&
-                      <View className="bg-yellow-100 rounded-sm w-[40px] h-4 justify-center items-center ml-2">
-                        <Text className="text-black text-xs">Pusat</Text>
-                      </View>
-                    }
                   </View>
-                  <Text className="text-base text-gray-100 ml-1 text-sm">
-                    {item.address} {item.phone ? `(${item.phone})` : ''}
-                  </Text>
                 </View>
               </View>
             </TouchableOpacity>
@@ -120,7 +113,7 @@ const Index = () => {
                   setIsloading={setIsLoading}
                   placeholder={'Cari Lokasi Toko'}
                   searchStyle="w-[85%] mt-4"
-                  txtId="txt002"
+                  textId="txt002"
                   btnId="btn002"
                 />
               </View>
@@ -131,9 +124,9 @@ const Index = () => {
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
         />
         <TouchableOpacity style={styles.circleButton} onPress={() =>
-          navigation.navigate('LocationStore', { screen: 'LocationCreateStack' })}>
-          <View testID="btn003">
-            <Icon name="plus" size={30} color="#fff" />
+          navigation.navigate('Employee', { screen: 'RoleAddStack' })}>
+          <View>
+            <Icon name="plus" size={30} color="#fff" testID="btn001" />
           </View>
         </TouchableOpacity>
       </View>
@@ -141,7 +134,7 @@ const Index = () => {
   )
 }
 
-export default Index
+export default Role
 
 const styles = StyleSheet.create({
   circleButton: {

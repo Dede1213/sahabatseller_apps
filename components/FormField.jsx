@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import { icons } from '../constants'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-const FormField = ({ title, value, handleChangeText, otherStyles, otherTextInputStyles, placeholder, keyboardType, handleBlur, editable, info, multiline, numberOfLines, ...proops }) => {
+const FormField = ({ title, value, handleChangeText, otherStyles, otherTextInputStyles, placeholder, keyboardType, handleBlur, editable, info, multiline, numberOfLines, testId, ...proops }) => {
     const [showPassword, setShowPassword] = useState(false)
     const [showPasswordConfirm, setShowPasswordConfirm] = useState(false)
     const [showPasswordNew, setShowPasswordNew] = useState(false)
@@ -31,23 +31,24 @@ const FormField = ({ title, value, handleChangeText, otherStyles, otherTextInput
                     editable={editable}
                     multiline={multiline ? multiline : false}
                     numberOfLines={numberOfLines ? numberOfLines : 2}
+                    testID={testId ? testId : ''}
                 />
 
                 {title === 'Password' && (
                     <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
-                        <Image source={showPassword ? icons.eye : icons.eyeHide} className="w-6 h-6" resizeMode='contain' />
+                        <Image source={showPassword ? icons.eye : icons.eyeHide} className="w-6 h-6 py-[21px]" resizeMode='contain' />
                     </TouchableOpacity>
                 )}
 
                 {title === 'Password Baru' && (
                     <TouchableOpacity onPress={() => setShowPasswordNew(!showPasswordNew)}>
-                        <Image source={showPasswordNew ? icons.eye : icons.eyeHide} className="w-6 h-6" resizeMode='contain' />
+                        <Image source={showPasswordNew ? icons.eye : icons.eyeHide} className="w-6 h-6 py-[21px]" resizeMode='contain' />
                     </TouchableOpacity>
                 )}
 
                 {title === 'Konfirmasi Password Baru' && (
                     <TouchableOpacity onPress={() => setShowPasswordConfirm(!showPasswordConfirm)}>
-                        <Image source={showPasswordConfirm ? icons.eye : icons.eyeHide} className="w-6 h-6" resizeMode='contain' />
+                        <Image source={showPasswordConfirm ? icons.eye : icons.eyeHide} className="w-6 h-6 py-[21px]" resizeMode='contain' />
                     </TouchableOpacity>
                 )}
             </View>

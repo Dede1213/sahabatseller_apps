@@ -14,7 +14,7 @@ import { ConfirmAlert } from '../../../lib/globalFunction'
 const validationSchema = Yup.object().shape({
   name: Yup.string().required('*nama toko wajib diisi'),
   address: Yup.string().required('*alamat toko wajib diisi'),
-  phone: Yup.string().required('*nomor telepon toko wajib diisi'),
+  phone: Yup.string().min(10, '*nomor handphone minimal 10 angka').required('*nomor handphone wajib diisi'),
 });
 
 const Edit = () => {
@@ -146,6 +146,7 @@ const Edit = () => {
                 handleChangeText={handleChange('name')}
                 handleBlur={handleBlur('name')}
                 otherStyles="mt-0"
+                testId="txt001"
               />
               {touched.name && errors.name && <Text className="text-gray-50">{errors.name}</Text>}
 
@@ -158,6 +159,7 @@ const Edit = () => {
                 multiline={true}
                 numberOfLines={4}
                 textAlignVertical="top"
+                testId="txt002"
               />
               {touched.address && errors.address && <Text className="text-gray-50">{errors.address}</Text>}
 
@@ -167,6 +169,7 @@ const Edit = () => {
                 handleChangeText={handleChange('phone')}
                 handleBlur={handleBlur('phone')}
                 otherStyles="mt-2"
+                testId="txt003"
               />
               {touched.phone && errors.phone && <Text className="text-gray-50">{errors.phone}</Text>}
 
@@ -177,6 +180,7 @@ const Edit = () => {
                   containerStyles={"mt-7 bg-secondary-200"}
                   isLoading={isSubmitting}
                   textStyles={"text-white"}
+                  testId="btn001"
                 />
                 {values.is_head_office == "TIDAK" &&
                   <CustomButton
@@ -185,6 +189,7 @@ const Edit = () => {
                     containerStyles={"mt-2"}
                     isLoading={isSubmitting}
                     textStyles={"color-red-500 underline"}
+                    testId="btn002"
                   />
                 }
 

@@ -27,7 +27,7 @@ const Index = () => {
                 >
                     <View className="flex-row items-center">
                         <Icon name={'account-outline'} color="gray-100" size={25} />
-                        <Text className="text-base font-PoppinsSemiBold text-gray-100 ml-3">{'Profil Pengguna'}</Text>
+                        <Text className="text-base font-PoppinsSemiBold text-gray-100 ml-3" testID="item-001">{'Profil Pengguna'}</Text>
                     </View>
                 </TouchableOpacity>
 
@@ -42,7 +42,7 @@ const Index = () => {
                     >
                         <View className="flex-row items-center">
                             <Icon name={'storefront-outline'} color="gray-100" size={25} />
-                            <Text className="text-base font-PoppinsSemiBold text-gray-100 ml-3">{'Profil Usaha'}</Text>
+                            <Text className="text-base font-PoppinsSemiBold text-gray-100 ml-3" testID="item-002">{'Profil Usaha'}</Text>
                         </View>
                     </TouchableOpacity>
                 )}
@@ -57,7 +57,7 @@ const Index = () => {
                 >
                     <View className="flex-row items-center">
                         <Icon name={'file-sign'} color="gray-100" size={25} />
-                        <Text className="text-base font-PoppinsSemiBold text-gray-100 ml-3">{'Syarat dan Ketentuan'}</Text>
+                        <Text className="text-base font-PoppinsSemiBold text-gray-100 ml-3" testID="item-003">{'Syarat dan Ketentuan'}</Text>
                     </View>
                 </TouchableOpacity>
 
@@ -71,7 +71,7 @@ const Index = () => {
                 >
                     <View className="flex-row items-center">
                         <Icon name={'file-sign'} color="gray-100" size={25} />
-                        <Text className="text-base font-PoppinsSemiBold text-gray-100 ml-3">{'Kebijakan Privasi'}</Text>
+                        <Text className="text-base font-PoppinsSemiBold text-gray-100 ml-3" testID="item-004">{'Kebijakan Privasi'}</Text>
                     </View>
                 </TouchableOpacity>
 
@@ -103,7 +103,7 @@ const Index = () => {
                 >
                     <View className="flex-row items-center">
                         <Icon name={'logout'} color="gray-100" size={25} />
-                        <Text className="text-base font-PoppinsSemiBold text-gray-100 ml-3">{'Keluar Akun'}</Text>
+                        <Text className="text-base font-PoppinsSemiBold text-gray-100 ml-3" testID="item-005">{'Keluar Akun'}</Text>
                     </View>
                 </TouchableOpacity>
             </ScrollView>

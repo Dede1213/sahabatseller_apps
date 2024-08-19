@@ -20,14 +20,14 @@ const Index = () => {
                 <TouchableOpacity
                     className="border-b border-gray-200 px-4 py-4"
                     onPress={() => {
-                        navigation.navigate('Employee', {
-                            screen: 'EmployeeViewStack'
+                        navigation.navigate('CashFlow', {
+                            screen: 'CashFlowViewStack'
                         })
                     }}
                 >
                     <View className="flex-row items-center" testID="item-001">
-                        <Icon name={'human-male-board-poll'} color="gray-100" size={25} />
-                        <Text className="text-base font-PoppinsSemiBold text-gray-100 ml-3">{'Data Pegawai'}</Text>
+                        <Icon name={'arrow-right-bold'} color="gray-100" size={25} />
+                        <Text className="text-base font-PoppinsSemiBold text-gray-100 ml-3">{'Arus Kas'}</Text>
                     </View>
                 </TouchableOpacity>
 
@@ -35,14 +35,18 @@ const Index = () => {
                     <TouchableOpacity
                         className="border-b border-gray-200 px-4 py-4"
                         onPress={() => {
-                            navigation.navigate('Employee', {
-                                screen: 'RoleViewStack'
-                            })
+                            if (user?.is_head_office == 'YA') {
+                                navigation.navigate('CashFlow', {
+                                    screen: 'CatFlowViewStack'
+                                })
+                            } else {
+                                Alert.alert('Lokasi anda bukan pusat.')
+                            }
                         }}
                     >
                         <View className="flex-row items-center" testID="item-002">
-                            <Icon name={'account-lock-outline'} color="gray-100" size={25} />
-                            <Text className="text-base font-PoppinsSemiBold text-gray-100 ml-3">{'Hak Akses'}</Text>
+                            <Icon name={'arrow-right-bold'} color="gray-100" size={25} />
+                            <Text className="text-base font-PoppinsSemiBold text-gray-100 ml-3">{'Kategori Arus Kas'}</Text>
                         </View>
                     </TouchableOpacity>
                 )}

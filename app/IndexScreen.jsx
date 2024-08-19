@@ -61,12 +61,14 @@ const IndexScreen = ({ navigation }) => {
             handlePress={() => navigation.replace('SignUp')}
             containerStyles="w-full mt-10 bg-secondary-200"
             textStyles="font-PoppinsRegular text-xl text-white "
+            testId="btn001"
           />
           <CustomButton
             title="Masuk"
             handlePress={() => navigation.replace('SignIn')}
             containerStyles="w-full mt-3 bg-primary border border-secondary-200"
             textStyles="font-PoppinsRegular text-xl text-secondary-200 text-secondary-200"
+            testId="btn002"
           />
         </View>
       </ScrollView>

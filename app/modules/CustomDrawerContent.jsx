@@ -29,7 +29,7 @@ const CustomDrawerContent = (props) => {
     <SafeAreaView style={{ flex: 1 }} edges={['left', 'right', 'bottom']}>
       <DrawerContentScrollView {...props}>
         <TouchableOpacity style={styles.userInfoSection} onPress={() => navigation.navigate('Profile')}>
-          <Image source={{ uri: user ? `${API_HOST}/profile/images/${user.photo}` : `${API_HOST}/profile/default.png` }} style={styles.profileImage} />
+          <Image source={{ uri: user ? `${API_HOST}/profile/images/${user.photo}` : `${API_HOST}/profile/images/default.png` }} style={styles.profileImage} />
           <View style={styles.premiumBadge}>
             <Text style={styles.premiumText}>Premium</Text>
           </View>
@@ -39,7 +39,7 @@ const CustomDrawerContent = (props) => {
           </View>
 
           <View style={styles.iconArrow}>
-            <Icon name="chevron-right" color="#000" size={20} />
+            <Icon name="chevron-right" color="#000" size={20} testID="mn001" />
           </View>
         </TouchableOpacity>
 
@@ -52,7 +52,7 @@ const CustomDrawerContent = (props) => {
           </View>
 
           <TouchableOpacity style={styles.outletButton} onPress={() => navigation.navigate('LocationStore', { screen: 'SwitchLocationStack' })}>
-            <Text style={styles.outletButtonText}>Pilih Lokasi</Text>
+            <Text style={styles.outletButtonText} testID='mn002'>Pilih Lokasi</Text>
           </TouchableOpacity>
         </View>
 
@@ -65,6 +65,7 @@ const CustomDrawerContent = (props) => {
             icon={() => <Icon name="home-outline" color="gray" size={25} />}
             labelStyle={{ marginLeft: -20, color: '#494952', fontFamily: 'PoppinsRegular', marginTop: 5 }}
             style={{ marginTop: -15 }}
+            testID="mn003"
           />
         )}
 
@@ -75,6 +76,7 @@ const CustomDrawerContent = (props) => {
             icon={() => <Icon name="account-clock-outline" color="gray" size={25} />}
             labelStyle={{ marginLeft: -20, color: '#494952', fontFamily: 'PoppinsRegular', marginTop: 5 }}
             style={{ marginTop: -15 }}
+            testID="mn004"
           />
         )}
 
@@ -85,6 +87,7 @@ const CustomDrawerContent = (props) => {
             icon={() => <Icon name="package-variant-closed" color="gray" size={25} />}
             labelStyle={{ marginLeft: -20, color: '#494952', fontFamily: 'PoppinsRegular', marginTop: 5 }}
             style={{ marginTop: -15 }}
+            testID="mn005"
           />
         )}
 
@@ -95,6 +98,7 @@ const CustomDrawerContent = (props) => {
             icon={() => <Icon name="calculator" color="gray" size={25} />}
             labelStyle={{ marginLeft: -20, color: '#494952', fontFamily: 'PoppinsRegular', marginTop: 5 }}
             style={{ marginTop: -15 }}
+            testID="mn006"
           />
         )}
 
@@ -105,26 +109,29 @@ const CustomDrawerContent = (props) => {
             icon={() => <Icon name="text-box-search-outline" color="gray" size={25} />}
             labelStyle={{ marginLeft: -20, color: '#494952', fontFamily: 'PoppinsRegular', marginTop: 5 }}
             style={{ marginTop: -15 }}
+            testID="mn007"
           />
         )}
 
         {moduleAccessArray.includes(6) && (
           <DrawerItem
-            label="Rekap Kas"
-            onPress={() => { }}
+            label="Arus Kas"
+            onPress={() => { navigation.navigate('CashFlow', { screen: 'CashFlowStack' }) }}
             icon={() => <Icon name="cash-check" color="gray" size={25} />}
             labelStyle={{ marginLeft: -20, color: '#494952', fontFamily: 'PoppinsRegular', marginTop: 5 }}
             style={{ marginTop: -15 }}
+            testID="mn008"
           />
         )}
 
         {moduleAccessArray.includes(7) && (
           <DrawerItem
             label="Pelanggan"
-            onPress={() => { }}
+            onPress={() => { navigation.navigate('Customer', { screen: 'CustomerStack' }) }}
             icon={() => <Icon name="contacts-outline" color="gray" size={25} />}
             labelStyle={{ marginLeft: -20, color: '#494952', fontFamily: 'PoppinsRegular', marginTop: 5 }}
             style={{ marginTop: -15 }}
+            testID="mn009"
           />
         )}
 
@@ -135,6 +142,7 @@ const CustomDrawerContent = (props) => {
             icon={() => <Icon name="human-male-board-poll" color="gray" size={25} />}
             labelStyle={{ marginLeft: -20, color: '#494952', fontFamily: 'PoppinsRegular', marginTop: 5 }}
             style={{ marginTop: -15 }}
+            testID="mn010"
           />
         )}
 
@@ -145,6 +153,7 @@ const CustomDrawerContent = (props) => {
             icon={() => <Icon name="google-maps" color="gray" size={25} />}
             labelStyle={{ marginLeft: -20, color: '#494952', fontFamily: 'PoppinsRegular', marginTop: 5 }}
             style={{ marginTop: -15 }}
+            testID="mn011"
           />
         )}
 
@@ -155,6 +164,7 @@ const CustomDrawerContent = (props) => {
             icon={() => <Icon name="warehouse" color="gray" size={25} />}
             labelStyle={{ marginLeft: -20, color: '#494952', fontFamily: 'PoppinsRegular', marginTop: 5 }}
             style={{ marginTop: -15 }}
+            testID="mn012"
           />
         )}
 
@@ -165,6 +175,7 @@ const CustomDrawerContent = (props) => {
             icon={() => <Icon name="file-document-edit-outline" color="gray" size={25} />}
             labelStyle={{ marginLeft: -20, color: '#494952', fontFamily: 'PoppinsRegular', marginTop: 5 }}
             style={{ marginTop: -15 }}
+            testID="mn013"
           />
         )}
 
@@ -175,6 +186,7 @@ const CustomDrawerContent = (props) => {
             icon={() => <Icon name="web" color="gray" size={25} />}
             labelStyle={{ marginLeft: -20, color: '#494952', fontFamily: 'PoppinsRegular', marginTop: 5 }}
             style={{ marginTop: -15 }}
+            testID="mn014"
           />
         )}
 
@@ -185,6 +197,7 @@ const CustomDrawerContent = (props) => {
             icon={() => <Icon name="storefront-outline" color="gray" size={25} />}
             labelStyle={{ marginLeft: -20, color: '#494952', fontFamily: 'PoppinsRegular', marginTop: 5 }}
             style={{ marginTop: -15 }}
+            testID="mn015"
           />
         )}
 
@@ -195,6 +208,7 @@ const CustomDrawerContent = (props) => {
             icon={() => <Icon name="cog-outline" color="gray" size={25} />}
             labelStyle={{ marginLeft: -20, color: '#494952', fontFamily: 'PoppinsRegular', marginTop: 5 }}
             style={{ marginTop: -15 }}
+            testID="mn016"
           />
         )}
 
@@ -204,6 +218,7 @@ const CustomDrawerContent = (props) => {
           icon={() => <Icon name="information-outline" color="gray" size={25} />}
           labelStyle={{ marginLeft: -20, color: '#494952', fontFamily: 'PoppinsRegular', marginTop: 5 }}
           style={{ marginTop: -15 }}
+          testID="mn017"
         />
 
         <DrawerItem
@@ -212,6 +227,7 @@ const CustomDrawerContent = (props) => {
           icon={() => <Icon name="whatsapp" color="gray" size={25} />}
           labelStyle={{ marginLeft: -20, color: '#494952', fontFamily: 'PoppinsRegular', marginTop: 5 }}
           style={{ marginTop: -15 }}
+          testID="mn018"
         />
 
         <View style={styles.divider} />
