@@ -1,5 +1,5 @@
 import { ScrollView, Text, View, Alert } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import FormField from '../../../components/FormField'
 import CustomButton from '../../../components/CustomButton'
 import { useGlobalContext } from '../../../context/globalProvider'
@@ -8,22 +8,41 @@ import { API_HOST } from '@env';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { useNavigation } from '@react-navigation/native'
+import AlertModal from '../../../components/AlertModal'
 
 const validationSchema = Yup.object().shape({
     name: Yup.string().required('*nama toko wajib diisi'),
     address: Yup.string().required('*alamat toko wajib diisi'),
-    phone: Yup.string().min(10, '*nomor handphone minimal 10 angka').required('*nomor handphone wajib diisi'),
+    phone: Yup.string().min(10, '*nomor handphone minimal 10 angka').required('*nomor handphone wajib diisi').matches(/^[0-9]+$/, '*nomor handphone harus berupa angka'),
 });
 
 const Create = () => {
     const navigation = useNavigation()
-    const { user } = useGlobalContext()
+    const { user, setRefreshTrigger } = useGlobalContext()
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [initialValues] = useState({
         name: '',
         address: '',
         phone: '',
     });
+
+    /* Alert */
+    const [isAlertVisible, setIsAlertVisible] = useState(false);
+    const [alertMessage, setAlertMessage] = useState('');
+    const [alertTitle, setAlertTitle] = useState('');
+    const showAlert = (title, message) => {
+        setAlertTitle(title);
+        setAlertMessage(message);
+        setIsAlertVisible(true);
+    };
+    const closeAlert = () => {
+        setIsAlertVisible(false);
+        setRefreshTrigger(true)
+        navigation.navigate('Customer', {
+            screen: 'CustomerStack',
+        });
+    };
+    /* End Alert */
 
     const submitAction = async (form) => {
         try {
@@ -44,10 +63,7 @@ const Create = () => {
 
             if (response.code) {
                 if (response.code === 200) {
-                    Alert.alert('Notifikasi', 'Pelanggan berhasil ditambah.')
-                    navigation.navigate('Customer', {
-                        screen: 'CustomerStack',
-                    });
+                    showAlert('Notifikasi', 'Pelanggan berhasil ditambah.');
                 }
             } else {
                 Alert.alert(response.message)
@@ -62,6 +78,7 @@ const Create = () => {
     return (
         <ScrollView className="bg-primary">
             <View className="w-full justify-center px-4 bg-primary mt-5">
+                <AlertModal visible={isAlertVisible} header={alertTitle} message={alertMessage} onClose={closeAlert} />
                 <Formik
                     initialValues={initialValues}
                     validationSchema={validationSchema}
@@ -100,6 +117,7 @@ const Create = () => {
                                 handleBlur={handleBlur('phone')}
                                 otherStyles="mt-2"
                                 testId="txt003"
+                                keyboardType="number-pad"
                             />
                             {touched.phone && errors.phone && <Text className="text-gray-50">{errors.phone}</Text>}
 

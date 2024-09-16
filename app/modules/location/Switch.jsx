@@ -8,6 +8,7 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import SelectField from '../../../components/SelectField'
 import * as SecureStore from 'expo-secure-store';
+import AlertModal from '../../../components/AlertModal'
 
 const Switch = () => {
   const { user, setUser } = useGlobalContext()
@@ -17,6 +18,20 @@ const Switch = () => {
     location_id: '',
     location_name: '',
   });
+
+  /* Alert */
+  const [isAlertVisible, setIsAlertVisible] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
+  const [alertTitle, setAlertTitle] = useState('');
+  const showAlert = (title, message) => {
+    setAlertTitle(title);
+    setAlertMessage(message);
+    setIsAlertVisible(true);
+  };
+  const closeAlert = () => {
+    setIsAlertVisible(false);
+  };
+  /* End Alert */
 
   const validationSchema = Yup.object().shape({
     location_id: Yup.string().required('*Lokasi wajib dipilih.'),
@@ -72,8 +87,8 @@ const Switch = () => {
         if (response.code === 200) {
           await SecureStore.deleteItemAsync('userToken');
           await SecureStore.setItemAsync('userToken', response.data.token);
-          setUser(prev => ({ ...prev,token: response.data.token, location_id: response.data.location_id, location_name: response.data.location_name, is_head_office: response.data.is_head_office }));
-          Alert.alert('Notifikasi', 'Lokasi toko anda berhasil diubah.')
+          setUser(prev => ({ ...prev, token: response.data.token, location_id: response.data.location_id, location_name: response.data.location_name, is_head_office: response.data.is_head_office }));
+          showAlert('Notifikasi', 'Lokasi toko anda berhasil diubah.');
         }
       } else {
         Alert.alert(response.message)
@@ -88,6 +103,7 @@ const Switch = () => {
   return (
     <ScrollView className="bg-primary">
       <View className="w-full justify-center px-4 bg-primary">
+        <AlertModal visible={isAlertVisible} header={alertTitle} message={alertMessage} onClose={closeAlert} />
         <Formik
           initialValues={initialValues}
           validationSchema={validationSchema}

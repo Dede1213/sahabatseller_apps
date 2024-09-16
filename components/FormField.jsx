@@ -51,6 +51,10 @@ const FormField = ({ title, value, handleChangeText, otherStyles, otherTextInput
                         <Image source={showPasswordConfirm ? icons.eye : icons.eyeHide} className="w-6 h-6 py-[21px]" resizeMode='contain' />
                     </TouchableOpacity>
                 )}
+
+                {title === 'Pilih Produk' && (
+                    <Image source={icons.search} className="w-6 h-6 py-[21px]" resizeMode='contain' />
+                )}
             </View>
         </View>
     )

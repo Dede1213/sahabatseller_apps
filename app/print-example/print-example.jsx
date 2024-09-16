@@ -345,7 +345,7 @@ const PrintExample = () => {
             </Text>
             {loading ? <ActivityIndicator animating={true} /> : null}
             <View style={styles.containerList}>
-                {pairedDevices.map((item, index) => {
+                {pairedDevices?.map((item, index) => {
                     return (
                         <ItemList
                             key={index}

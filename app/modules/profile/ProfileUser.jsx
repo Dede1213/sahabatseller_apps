@@ -11,11 +11,12 @@ import * as Yup from 'yup';
 import * as DocumentPicker from "expo-document-picker";
 import { Button } from 'react-native-elements'
 import * as SecureStore from 'expo-secure-store';
+import AlertModal from '../../../components/AlertModal'
 
 const validationSchema = Yup.object().shape({
   fullname: Yup.string().required('*fullname wajib diisi'),
   email: Yup.string().email('*email tidak valid').required('*email wajib diisi'),
-  phone: Yup.string().min(10, '*nomor handphone minimal 10 angka').required('*nomor handphone wajib diisi'),
+  phone: Yup.string().min(10, '*nomor handphone minimal 10 angka').required('*nomor handphone wajib diisi').matches(/^[0-9]+$/, '*nomor handphone harus berupa angka'),
 });
 
 const validationSchemaPassword = Yup.object().shape({
@@ -39,6 +40,20 @@ const ProfileUser = () => {
     affiliator_code: '',
   });
 
+  /* Alert */
+  const [isAlertVisible, setIsAlertVisible] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
+  const [alertTitle, setAlertTitle] = useState('');
+  const showAlert = (title, message) => {
+    setAlertTitle(title);
+    setAlertMessage(message);
+    setIsAlertVisible(true);
+  };
+  const closeAlert = () => {
+    setIsAlertVisible(false);
+  };
+  /* End Alert */
+
   const [initialValuesPhoto, setInitialValuesPhoto] = useState({
     photo: ''
   });
@@ -49,8 +64,8 @@ const ProfileUser = () => {
   });
 
   const [affiliatorValue, setAffiliatorValue] = useState({
-    affiliator_name : '',
-    affiliator_phone : '',
+    affiliator_name: '',
+    affiliator_phone: '',
   })
 
   let info = '';
@@ -82,8 +97,8 @@ const ProfileUser = () => {
           });
 
           setAffiliatorValue({
-            affiliator_name : response.data.affiliator_name || '',
-            affiliator_phone : response.data.affiliator_phone || '',
+            affiliator_name: response.data.affiliator_name || '',
+            affiliator_phone: response.data.affiliator_phone || '',
           })
 
           setInitialValuesPhoto({
@@ -122,7 +137,7 @@ const ProfileUser = () => {
       if (response.code) {
         if (response.code === 200) {
           setRefetchTrigger(prev => prev + 1);
-          Alert.alert('Notifikasi', 'akun anda berhasil diubah.')
+          showAlert('Notifikasi', 'Akun anda berhasil diubah.');
         }
       } else {
         Alert.alert(response.message)
@@ -159,7 +174,7 @@ const ProfileUser = () => {
 
       if (response.code) {
         if (response.code === 200) {
-          Alert.alert('Notifikasi', 'password anda berhasil diubah.')
+          showAlert('Notifikasi', 'Password anda berhasil diubah.');
         }
       } else {
         Alert.alert(response.message)
@@ -226,7 +241,11 @@ const ProfileUser = () => {
       });
       setUser(prev => ({ ...prev, photo: response.data.photo }));
 
-      Alert.alert("Notifikasi", response.message);
+      if (response.code == 200) {
+        showAlert('Notifikasi', 'Gambar Profil berhasil diubah.');
+      } else {
+        showAlert('Notifikasi', 'Gambar Profil gagal diubah.');
+      }
     } catch (error) {
       Alert.alert("Notifikasi", error.message)
     } finally {
@@ -237,6 +256,7 @@ const ProfileUser = () => {
   return (
     <ScrollView className="bg-primary">
       <View className="w-full justify-center px-4 bg-primary mt-5">
+        <AlertModal visible={isAlertVisible} header={alertTitle} message={alertMessage} onClose={closeAlert} />
         <Formik
           initialValues={initialValuesPhoto}
           onSubmit={() => {
@@ -270,7 +290,7 @@ const ProfileUser = () => {
                 </View>
               </TouchableOpacity>
               <View className="w-[150px] bg-primary rounded-2xl ">
-                <Button title={uploading ? "Uploading..." : "Upload"} onPress={handleSubmit} isLoading={uploading} testID="btn002"/>
+                <Button title={uploading ? "Uploading..." : "Upload"} onPress={handleSubmit} isLoading={uploading} testID="btn002" />
               </View>
             </View>
           )}

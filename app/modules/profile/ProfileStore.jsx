@@ -12,6 +12,7 @@ import * as DocumentPicker from "expo-document-picker";
 import { Button } from 'react-native-elements'
 import * as SecureStore from 'expo-secure-store';
 import SelectField from '../../../components/SelectField'
+import AlertModal from '../../../components/AlertModal'
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().required('*nama toko wajib diisi'),
@@ -30,6 +31,20 @@ const ProfileStore = () => {
     tax_count: '',
     margin_percentage: '',
   });
+
+  /* Alert */
+  const [isAlertVisible, setIsAlertVisible] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
+  const [alertTitle, setAlertTitle] = useState('');
+  const showAlert = (title, message) => {
+    setAlertTitle(title);
+    setAlertMessage(message);
+    setIsAlertVisible(true);
+  };
+  const closeAlert = () => {
+    setIsAlertVisible(false);
+  };
+  /* End Alert */
 
   const [initialValuesLogo, setInitialValuesLogo] = useState({
     logo: ''
@@ -121,7 +136,7 @@ const ProfileStore = () => {
 
       if (response.code) {
         if (response.code === 200) {
-          Alert.alert('Notifikasi', 'toko anda berhasil diubah.')
+          showAlert('Notifikasi', 'Toko anda berhasil diubah.');
         }
       } else {
         Alert.alert(response.message)
@@ -186,7 +201,12 @@ const ProfileStore = () => {
         method: 'put',
         data: formData
       });
-      Alert.alert("Notifikasi", response.message);
+
+      if (response.code == 200) {
+        showAlert('Notifikasi', 'Logo Toko berhasil diubah.');
+      } else {
+        showAlert('Notifikasi', 'Logo Toko gagal diubah.');
+      }
     } catch (error) {
       Alert.alert("Notifikasi", error.message)
     } finally {
@@ -198,6 +218,7 @@ const ProfileStore = () => {
   return (
     <ScrollView className="bg-primary">
       <View className="w-full justify-center px-4 bg-primary mt-5">
+        <AlertModal visible={isAlertVisible} header={alertTitle} message={alertMessage} onClose={closeAlert} />
         <Formik
           initialValues={initialValuesLogo}
           onSubmit={() => {
@@ -231,7 +252,7 @@ const ProfileStore = () => {
                 </View>
               </TouchableOpacity>
               <View className="w-[150px] bg-primary rounded-2xl ">
-                <Button title={uploading ? "Uploading..." : "Upload"} onPress={handleSubmit} isLoading={uploading} testID="btn002"/>
+                <Button title={uploading ? "Uploading..." : "Upload"} onPress={handleSubmit} isLoading={uploading} testID="btn002" />
               </View>
             </View>
           )}
@@ -294,7 +315,7 @@ const ProfileStore = () => {
                   handleChangeText={handleChange('margin_percentage')}
                   handleBlur={handleBlur('margin_percentage')}
                   otherStyles="mt-3 w-[200px]"
-                  keyboardType="numeric"
+                  keyboardType="number-pad"
                   testId="txt004"
                 />
                 <Text className="text-gray-100 text-2xl mt-10 ml-2">%</Text>

@@ -11,15 +11,13 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { RefreshControl } from 'react-native'
 import { ActivityIndicator } from 'react-native'
 import { useNavigation } from '@react-navigation/native';
-import { useIsFocused } from '@react-navigation/native';
 import { CapitalizeEachWord } from '../../../lib/globalFunction';
 
 const Index = () => {
   const navigation = useNavigation();
-  const isFocused = useIsFocused();
-  const { user } = useGlobalContext()
+  const { user, refreshTrigger, setRefreshTrigger } = useGlobalContext()
   const [searchQuery, setSearchQuery] = useState('');
-  const [orderBy, setOrderBy] = useState('asc');
+  const [orderBy, setOrderBy] = useState('desc');
   const [dataLocation, setDataLocation] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -54,6 +52,7 @@ const Index = () => {
 
         if (response.code) {
           if (response.code === 200) {
+            setRefreshTrigger(false);
             setDataLocation(response.data.rows);
             setIsLoading(false);
           }
@@ -65,7 +64,7 @@ const Index = () => {
       }
     };
     getData();
-  }, [refetchTrigger, searchQuery, isFocused, orderBy]);
+  }, [refetchTrigger, searchQuery, refreshTrigger, orderBy]);
 
   const renderEmptyComponent = () => {
     if (isLoading) {
@@ -94,11 +93,16 @@ const Index = () => {
                 <View>
                   <View className="flex-row items-center">
                     <Text className="text-base font-PoppinsSemiBold text-blue-200 ml-1 text-lg">
-                      {CapitalizeEachWord(item.name)}
+                      {CapitalizeEachWord(item.name ? item.name : '')}
                     </Text>
                     {item.is_head_office == "YA" &&
-                      <View className="bg-yellow-100 rounded-sm w-[40px] h-4 justify-center items-center ml-2">
-                        <Text className="text-black text-xs">Pusat</Text>
+                      <View className="bg-secondary rounded-sm w-[40px] h-4 justify-center items-center ml-2">
+                        <Text className="text-white text-xs">Pusat</Text>
+                      </View>
+                    }
+                    {item.is_head_office == "TIDAK" &&
+                      <View className="bg-yellow-100 rounded-sm w-[45px] h-4 justify-center items-center ml-2">
+                        <Text className="text-white text-xs">Cabang</Text>
                       </View>
                     }
                   </View>

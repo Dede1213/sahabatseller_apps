@@ -37,6 +37,37 @@ import RoleView from './employee/Role';
 import RoleAdd from './employee/RoleAdd';
 import RoleEdit from './employee/RoleEdit';
 
+import ItemIndex from './item/Index';
+import ItemViewIndex from './item/item/Index';
+import ItemEdit from './item/item/Edit';
+import ItemCreate from './item/item/Create';
+
+import ItemVariantIndex from './item/variant/Index';
+import ItemVariantEdit from './item/variant/Edit';
+import ItemVariantCreate from './item/variant/Create';
+import ItemVariantAdjust from './item/variant/Adjust';
+
+import ItemCategoryIndex from './item/category/Index';
+import ItemCategoryEdit from './item/category/Edit';
+import ItemCategoryCreate from './item/category/Create';
+
+import ItemBrandIndex from './item/brand/Index';
+import ItemBrandEdit from './item/brand/Edit';
+import ItemBrandCreate from './item/brand/Create';
+
+import ItemMaterialIndex from './item/material/Index';
+import ItemMaterialEdit from './item/material/Edit';
+import ItemMaterialCreate from './item/material/Create';
+import ItemMaterialAdjust from './item/material/Adjust';
+
+import PromotionIndex from './promotion/Index';
+import ItemBundlingIndex from './promotion/bundling/Index';
+import ItemBundlingItem from './promotion/bundling/Item';
+import ItemBundlingVariant from './promotion/bundling/Variant';
+import DiscountIndex from './promotion/discount/Index';
+import DiscountCreate from './promotion/discount/Create';
+import DiscountEdit from './promotion/discount/Edit';
+
 const CustomHeaderLeft = ({ onPress }) => (
   <TouchableOpacity onPress={onPress} className="ml-2">
     <Icon name="menu" color="#000" size={25} testID="open-drawer-button" />
@@ -65,6 +96,8 @@ const LocationStoreStack = createStackNavigator();
 const EmployeeStack = createStackNavigator();
 const CustomerStack = createStackNavigator();
 const CashFlowStack = createStackNavigator();
+const ItemStack = createStackNavigator();
+const PromotionStack = createStackNavigator();
 
 function HomeStackNavigator() {
   return (
@@ -180,42 +213,42 @@ function EmployeeStackNavigator({ navigation }) {
       <EmployeeStack.Screen name="EmployeeViewStack" component={EmployeeView}
         options={{
           headerShown: true,
-          headerLeft: () => <CustomHeaderLeftBack onPress={() => navigation.popToTop()} />,
+          headerLeft: () => <CustomHeaderLeftBack onPress={() => navigation.navigate('Employee', { screen: 'EmployeeStack' })} />,
           headerTitle: 'Pegawai',
         }}
       />
       <EmployeeStack.Screen name="EmployeeAddStack" component={EmployeeAdd}
         options={{
           headerShown: true,
-          headerLeft: () => <CustomHeaderLeftBack onPress={() => navigation.popToTop()} />,
+          headerLeft: () => <CustomHeaderLeftBack onPress={() => navigation.navigate('Employee', { screen: 'EmployeeViewStack' })} />,
           headerTitle: 'Tambah Pegawai',
         }}
       />
       <EmployeeStack.Screen name="EmployeeEditStack" component={EmployeeEdit}
         options={{
           headerShown: true,
-          headerLeft: () => <CustomHeaderLeftBack onPress={() => navigation.popToTop()} />,
+          headerLeft: () => <CustomHeaderLeftBack onPress={() => navigation.navigate('Employee', { screen: 'EmployeeViewStack' })} />,
           headerTitle: 'Ubah Pegawai',
         }}
       />
       <EmployeeStack.Screen name="RoleViewStack" component={RoleView}
         options={{
           headerShown: true,
-          headerLeft: () => <CustomHeaderLeftBack onPress={() => navigation.popToTop()} />,
+          headerLeft: () => <CustomHeaderLeftBack onPress={() => navigation.navigate('Employee', { screen: 'EmployeeStack' })} />,
           headerTitle: 'Hak Akses',
         }}
       />
       <EmployeeStack.Screen name="RoleAddStack" component={RoleAdd}
         options={{
           headerShown: true,
-          headerLeft: () => <CustomHeaderLeftBack onPress={() => navigation.popToTop()} />,
+          headerLeft: () => <CustomHeaderLeftBack onPress={() => navigation.navigate('Employee', { screen: 'RoleViewStack' })} />,
           headerTitle: 'Tambah Hak Akses',
         }}
       />
       <EmployeeStack.Screen name="RoleEditStack" component={RoleEdit}
         options={{
           headerShown: true,
-          headerLeft: () => <CustomHeaderLeftBack onPress={() => navigation.popToTop()} />,
+          headerLeft: () => <CustomHeaderLeftBack onPress={() => navigation.navigate('Employee', { screen: 'RoleViewStack' })} />,
           headerTitle: 'Ubah Hak Akses',
         }}
       />
@@ -273,42 +306,42 @@ function CashFlowStackNavigator({ navigation }) {
       <CashFlowStack.Screen name="CashFlowViewStack" component={ViewCashFlow}
         options={{
           headerShown: true,
-          headerLeft: () => <CustomHeaderLeftBack onPress={() => navigation.popToTop()} />,
+          headerLeft: () => <CustomHeaderLeftBack onPress={() => navigation.navigate('CashFlow', { screen: 'CashFlowStack' })} />,
           headerTitle: 'Arus Kas',
         }}
       />
       <CashFlowStack.Screen name="CashFlowCreateStack" component={CreateCashFlow}
         options={{
           headerShown: true,
-          headerLeft: () => <CustomHeaderLeftBack onPress={() => navigation.popToTop()} />,
+          headerLeft: () => <CustomHeaderLeftBack onPress={() => navigation.navigate('CashFlow', { screen: 'CashFlowViewStack' })} />,
           headerTitle: 'Tambah Arus Kas',
         }}
       />
       <CashFlowStack.Screen name="CashFlowEditStack" component={EditCashFlow}
         options={{
           headerShown: true,
-          headerLeft: () => <CustomHeaderLeftBack onPress={() => navigation.popToTop()} />,
+          headerLeft: () => <CustomHeaderLeftBack onPress={() => navigation.navigate('CashFlow', { screen: 'CashFlowViewStack' })} />,
           headerTitle: 'Ubah Arus Kas',
         }}
       />
       <CashFlowStack.Screen name="CatFlowViewStack" component={ViewCatFlow}
         options={{
           headerShown: true,
-          headerLeft: () => <CustomHeaderLeftBack onPress={() => navigation.popToTop()} />,
+          headerLeft: () => <CustomHeaderLeftBack onPress={() => navigation.navigate('CashFlow', { screen: 'CashFlowStack' })} />,
           headerTitle: 'Kategori Arus Kas',
         }}
       />
       <CashFlowStack.Screen name="CatFlowCreateStack" component={CreateCatFlow}
         options={{
           headerShown: true,
-          headerLeft: () => <CustomHeaderLeftBack onPress={() => navigation.popToTop()} />,
+          headerLeft: () => <CustomHeaderLeftBack onPress={() => navigation.navigate('CashFlow', { screen: 'CatFlowViewStack' })} />,
           headerTitle: 'Tambah Kategori Arus Kas',
         }}
       />
       <CashFlowStack.Screen name="CatFlowEditStack" component={EditCatFlow}
         options={{
           headerShown: true,
-          headerLeft: () => <CustomHeaderLeftBack onPress={() => navigation.popToTop()} />,
+          headerLeft: () => <CustomHeaderLeftBack onPress={() => navigation.navigate('CashFlow', { screen: 'CatFlowViewStack' })} />,
           headerTitle: 'Ubah Kategori Arus Kas',
         }}
       />
@@ -316,6 +349,201 @@ function CashFlowStackNavigator({ navigation }) {
   );
 }
 
+function ItemStackNavigator({ navigation }) {
+  return (
+    <ItemStack.Navigator>
+      <ItemStack.Screen name="ItemStack" component={ItemIndex}
+        options={({ navigation }) => ({
+          headerShown: true,
+          headerLeft: () => <CustomHeaderLeft onPress={() => navigation.openDrawer()} />,
+          headerTitle: 'Kelola Produk',
+        })}
+      />
+      <ItemStack.Screen name="ItemViewStack" component={ItemViewIndex}
+        options={{
+          headerShown: true,
+          headerLeft: () => <CustomHeaderLeftBack onPress={() => navigation.navigate('Item', { screen: 'ItemStack' })} />,
+          headerTitle: 'Produk',
+        }}
+      />
+      <ItemStack.Screen name="ItemCreateStack" component={ItemCreate}
+        options={{
+          headerShown: true,
+          headerLeft: () => <CustomHeaderLeftBack onPress={() => navigation.navigate('Item', { screen: 'ItemViewStack' })} />,
+          headerTitle: 'Tambah Produk',
+        }}
+      />
+      <ItemStack.Screen name="ItemEditStack" component={ItemEdit}
+        options={{
+          headerShown: true,
+          headerLeft: () => <CustomHeaderLeftBack onPress={() => navigation.navigate('Item', { screen: 'ItemViewStack' })} />,
+          headerTitle: 'Ubah Produk',
+        }}
+      />
+      <ItemStack.Screen name="ItemCategoryStack" component={ItemCategoryIndex}
+        options={{
+          headerShown: true,
+          headerLeft: () => <CustomHeaderLeftBack onPress={() => navigation.navigate('Item', { screen: 'ItemStack' })} />,
+          headerTitle: 'Kategori Produk',
+        }}
+      />
+      <ItemStack.Screen name="ItemCategoryCreateStack" component={ItemCategoryCreate}
+        options={{
+          headerShown: true,
+          headerLeft: () => <CustomHeaderLeftBack onPress={() => navigation.navigate('Item', { screen: 'ItemCategoryStack' })} />,
+          headerTitle: 'Tambah Kategori Produk',
+        }}
+      />
+      <ItemStack.Screen name="ItemCategoryEditStack" component={ItemCategoryEdit}
+        options={{
+          headerShown: true,
+          headerLeft: () => <CustomHeaderLeftBack onPress={() => navigation.navigate('Item', { screen: 'ItemCategoryStack' })} />,
+          headerTitle: 'Ubah Kategori Produk',
+        }}
+      />
+      <ItemStack.Screen name="ItemBrandStack" component={ItemBrandIndex}
+        options={{
+          headerShown: true,
+          headerLeft: () => <CustomHeaderLeftBack onPress={() => navigation.navigate('Item', { screen: 'ItemStack' })} />,
+          headerTitle: 'Merek Produk',
+        }}
+      />
+      <ItemStack.Screen name="ItemBrandCreateStack" component={ItemBrandCreate}
+        options={{
+          headerShown: true,
+          headerLeft: () => <CustomHeaderLeftBack onPress={() => navigation.navigate('Item', { screen: 'ItemBrandStack' })} />,
+          headerTitle: 'Tambah Merek Produk',
+        }}
+      />
+      <ItemStack.Screen name="ItemBrandEditStack" component={ItemBrandEdit}
+        options={{
+          headerShown: true,
+          headerLeft: () => <CustomHeaderLeftBack onPress={() => navigation.navigate('Item', { screen: 'ItemBrandStack' })} />,
+          headerTitle: 'Ubah Merek Produk',
+        }}
+      />
+
+      <ItemStack.Screen name="ItemVariantStack" component={ItemVariantIndex}
+        options={{
+          headerShown: true,
+          headerLeft: () => <CustomHeaderLeftBack onPress={() => navigation.navigate('Item', { screen: 'ItemViewStack' })} />,
+          headerTitle: 'Variasi Produk',
+        }}
+      />
+      <ItemStack.Screen name="ItemVariantCreateStack" component={ItemVariantCreate}
+        options={{
+          headerShown: true,
+          headerLeft: () => <CustomHeaderLeftBack onPress={() => navigation.navigate('Item', { screen: 'ItemVariantStack' })} />,
+          headerTitle: 'Tambah Variasi Produk',
+        }}
+      />
+      <ItemStack.Screen name="ItemVariantEditStack" component={ItemVariantEdit}
+        options={{
+          headerShown: true,
+          headerLeft: () => <CustomHeaderLeftBack onPress={() => navigation.navigate('Item', { screen: 'ItemVariantStack' })} />,
+          headerTitle: 'Ubah Variasi Produk',
+        }}
+      />
+      <ItemStack.Screen name="ItemVariantAdjustStack" component={ItemVariantAdjust}
+        options={{
+          headerShown: true,
+          headerLeft: () => <CustomHeaderLeftBack onPress={() => navigation.navigate('Item', { screen: 'ItemViewStack' })} />,
+          headerTitle: 'Tambah Stok Variasi Produk',
+        }}
+      />
+      <ItemStack.Screen name="ItemMaterialStack" component={ItemMaterialIndex}
+        options={{
+          headerShown: true,
+          headerLeft: () => <CustomHeaderLeftBack onPress={() => navigation.navigate('Item', { screen: 'ItemStack' })} />,
+          headerTitle: 'Bahan Baku Produk',
+        }}
+      />
+      <ItemStack.Screen name="ItemMaterialCreateStack" component={ItemMaterialCreate}
+        options={{
+          headerShown: true,
+          headerLeft: () => <CustomHeaderLeftBack onPress={() => navigation.navigate('Item', { screen: 'ItemMaterialStack' })} />,
+          headerTitle: 'Tambah Bahan Baku Produk',
+        }}
+      />
+      <ItemStack.Screen name="ItemMaterialEditStack" component={ItemMaterialEdit}
+        options={{
+          headerShown: true,
+          headerLeft: () => <CustomHeaderLeftBack onPress={() => navigation.navigate('Item', { screen: 'ItemMaterialStack' })} />,
+          headerTitle: 'Ubah Bahan Baku Produk',
+        }}
+      />
+      <ItemStack.Screen name="ItemMaterialAdjustStack" component={ItemMaterialAdjust}
+        options={{
+          headerShown: true,
+          headerLeft: () => <CustomHeaderLeftBack onPress={() => navigation.navigate('Item', { screen: 'ItemMaterialStack' })} />,
+          headerTitle: 'Tambah Stok Bahan Baku',
+        }}
+      />
+      
+    </ItemStack.Navigator>
+
+  );
+}
+
+function PromotionStackNavigator({ navigation }) {
+  return (
+    <PromotionStack.Navigator
+      screenOptions={{
+        headerStyle: styles.borderBottomStyle,
+      }}
+    >
+      <PromotionStack.Screen name="PromotionStack" component={PromotionIndex}
+        options={{
+          headerShown: true,
+          headerLeft: () => <CustomHeaderLeft onPress={() => navigation.openDrawer()} />,
+          headerTitle: 'Promosi Produk',
+        }}
+      />
+      <PromotionStack.Screen name="ItemBundlingStack" component={ItemBundlingIndex}
+        options={{
+          headerShown: true,
+          headerLeft: () => <CustomHeaderLeftBack onPress={() => navigation.navigate('Promotion', { screen: 'PromotionStack' })} />,
+          headerTitle: 'Produk Bundling',
+        }}
+      />
+      <PromotionStack.Screen name="ItemBundlingItemStack" component={ItemBundlingItem}
+        options={{
+          headerShown: true,
+          headerLeft: () => <CustomHeaderLeftBack onPress={() => navigation.navigate('Promotion', { screen: 'ItemBundlingStack' })} />,
+          headerTitle: 'Komponen Produk Bundling',
+        }}
+      />
+      <PromotionStack.Screen name="ItemBundlingVariantStack" component={ItemBundlingVariant}
+        options={{
+          headerShown: true,
+          headerLeft: () => <CustomHeaderLeftBack onPress={() => navigation.navigate('Promotion', { screen: 'ItemBundlingStack' })} />,
+          headerTitle: 'Komponen Variasi Produk Bundling',
+        }}
+      />
+      <PromotionStack.Screen name="DiscountStack" component={DiscountIndex}
+        options={{
+          headerShown: true,
+          headerLeft: () => <CustomHeaderLeftBack onPress={() => navigation.navigate('Promotion', { screen: 'PromotionStack' })} />,
+          headerTitle: 'Diskon Produk',
+        }}
+      />
+      <PromotionStack.Screen name="DiscountCreateStack" component={DiscountCreate}
+        options={{
+          headerShown: true,
+          headerLeft: () => <CustomHeaderLeftBack onPress={() => navigation.navigate('Promotion', { screen: 'DiscountStack' })} />,
+          headerTitle: 'Tambah Diskon Produk',
+        }}
+      />
+      <PromotionStack.Screen name="DiscountEditStack" component={DiscountEdit}
+        options={{
+          headerShown: true,
+          headerLeft: () => <CustomHeaderLeftBack onPress={() => navigation.navigate('Promotion', { screen: 'DiscountStack' })} />,
+          headerTitle: 'Ubah Diskon Produk',
+        }}
+      />
+    </PromotionStack.Navigator>
+  );
+}
 
 
 const Drawer = createDrawerNavigator();
@@ -333,6 +561,8 @@ const MainDrawer = () => {
         <Drawer.Screen name="Employee" component={EmployeeStackNavigator} options={{ title: 'Lokasi', headerShown: false }} />
         <Drawer.Screen name="Customer" component={CustomerStackNavigator} options={{ title: 'Pelanggan', headerShown: false }} />
         <Drawer.Screen name="CashFlow" component={CashFlowStackNavigator} options={{ title: 'Arus Kas', headerShown: false }} />
+        <Drawer.Screen name="Item" component={ItemStackNavigator} options={{ title: 'Kelola Produk', headerShown: false }} />
+        <Drawer.Screen name="Promotion" component={PromotionStackNavigator} options={{ title: 'Promosi', headerShown: false }} />
       </Drawer.Navigator>
       <StatusBar backgroundColor='#fff' className="dark" style="light" />
     </>

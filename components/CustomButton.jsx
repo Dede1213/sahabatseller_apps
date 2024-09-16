@@ -10,7 +10,7 @@ const CustomButton = ({ title, handlePress, containerStyles, textStyles, isLoadi
             disabled={isLoading}
         >
             <Text className={`font-PoppinsRegular text-xl ${textStyles}`} testID={testId ? testId : ''}>
-                {isLoading ? 'Loading...' : title}
+                {title}
             </Text>
         </TouchableOpacity>
     )

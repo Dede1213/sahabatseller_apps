@@ -9,12 +9,13 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { useNavigation } from '@react-navigation/native'
 import { useRoute } from '@react-navigation/native';
-import { ConfirmAlert } from '../../../lib/globalFunction'
+import AlertConfirmModal from '../../../components/AlertConfirmModal'
+import AlertModal from '../../../components/AlertModal'
 
 const validationSchema = Yup.object().shape({
     name: Yup.string().required('*nama toko wajib diisi'),
     address: Yup.string().required('*alamat toko wajib diisi'),
-    phone: Yup.string().min(10, '*nomor handphone minimal 10 angka').required('*nomor handphone wajib diisi'),
+    phone: Yup.string().min(10, '*nomor handphone minimal 10 angka').required('*nomor handphone wajib diisi').matches(/^[0-9]+$/, '*nomor handphone harus berupa angka'),
 });
 
 const Edit = () => {
@@ -22,15 +23,50 @@ const Edit = () => {
     const { id } = route.params;
 
     const navigation = useNavigation()
-    const { user } = useGlobalContext()
+    const { user, setRefreshTrigger } = useGlobalContext()
     const [isSubmitting, setIsSubmitting] = useState(false)
-    const [isDeleting, setIsDeleting] = useState(false)
     const [initialValues, setInitialValues] = useState({
         name: '',
         address: '',
         phone: '',
     });
 
+    /* Alert Confirm */
+    const [isAlertConfirmVisible, setIsAlertConfirmVisible] = useState(false);
+    const [alertConfirmMessage, setAlertConfirmMessage] = useState('');
+    const [alertConfirmTitle, setAlertConfirmTitle] = useState('');
+    const showAlertConfirm = (title, message) => {
+        setAlertConfirmTitle(title);
+        setAlertConfirmMessage(message);
+        setIsAlertConfirmVisible(true);
+    };
+    const closeAlertConfirm = () => {
+        setIsAlertConfirmVisible(false);
+    };
+
+    const acceptAlertConfirm = () => {
+        setIsAlertConfirmVisible(false);
+        handleDelete();
+    };
+    /* End Alert */
+
+    /* Alert */
+    const [isAlertVisible, setIsAlertVisible] = useState(false);
+    const [alertMessage, setAlertMessage] = useState('');
+    const [alertTitle, setAlertTitle] = useState('');
+    const showAlert = (title, message) => {
+        setAlertTitle(title);
+        setAlertMessage(message);
+        setIsAlertVisible(true);
+    };
+    const closeAlert = () => {
+        setIsAlertVisible(false);
+        setRefreshTrigger(true)
+        navigation.navigate('Customer', {
+            screen: 'CustomerStack',
+        });
+    };
+    /* End Alert */
 
     useEffect(() => {
         const getData = async (id) => {
@@ -84,10 +120,7 @@ const Edit = () => {
 
             if (response.code) {
                 if (response.code === 200) {
-                    Alert.alert('Notifikasi', 'Pelanggan berhasil diubah.')
-                    navigation.navigate('Customer', {
-                        screen: 'CustomerStack',
-                    });
+                    showAlert('Notifikasi', 'Pelanggan berhasil diubah.');
                 }
             } else {
                 Alert.alert(response.message)
@@ -101,7 +134,6 @@ const Edit = () => {
 
     const handleDelete = async () => {
         try {
-            setIsDeleting(true)
             const response = await fetchData(`${API_HOST}/customer/delete/${id}`, {
                 method: 'delete',
                 headers: {
@@ -113,10 +145,7 @@ const Edit = () => {
 
             if (response.code) {
                 if (response.code === 200) {
-                    Alert.alert('Notifikasi', 'Pelanggan berhasil dihapus.')
-                    navigation.navigate('Customer', {
-                        screen: 'CustomerStack',
-                    });
+                    showAlert('Notifikasi', 'Pelanggan berhasil dihapus.');
                 }
             } else {
                 Alert.alert(response.message)
@@ -124,13 +153,15 @@ const Edit = () => {
         } catch (error) {
             Alert.alert(error.message)
         } finally {
-            setIsDeleting
+            setIsSubmitting(false)
         }
     };
 
     return (
         <ScrollView className="bg-primary">
             <View className="w-full justify-center px-4 bg-primary mt-5">
+                <AlertConfirmModal visible={isAlertConfirmVisible} header={alertConfirmTitle} message={alertConfirmMessage} onClose={closeAlertConfirm} onAccept={acceptAlertConfirm} />
+                <AlertModal visible={isAlertVisible} header={alertTitle} message={alertMessage} onClose={closeAlert} />
                 <Formik
                     initialValues={initialValues}
                     validationSchema={validationSchema}
@@ -172,6 +203,7 @@ const Edit = () => {
                                 handleBlur={handleBlur('phone')}
                                 otherStyles="mt-2"
                                 testId="txt003"
+                                keyboardType="number-pad"
                             />
                             {touched.phone && errors.phone && <Text className="text-gray-50">{errors.phone}</Text>}
 
@@ -186,7 +218,7 @@ const Edit = () => {
                                 />
                                 <CustomButton
                                     title="Hapus Lokasi"
-                                    handlePress={() => ConfirmAlert("Konfirmasi", "Apakah Anda yakin ingin menghapus lokasi ini?", handleDelete)}
+                                    handlePress={() => showAlertConfirm('Konfirmasi', 'Apakah Anda yakin ingin menghapus lokasi ini?')}
                                     containerStyles={"mt-2"}
                                     isLoading={isSubmitting}
                                     textStyles={"color-red-500 underline"}

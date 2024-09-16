@@ -11,15 +11,13 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { RefreshControl } from 'react-native'
 import { ActivityIndicator } from 'react-native'
 import { useNavigation } from '@react-navigation/native';
-import { useIsFocused } from '@react-navigation/native';
 import { CapitalizeEachWord } from '../../../lib/globalFunction';
 
 const Employee = () => {
   const navigation = useNavigation();
-  const isFocused = useIsFocused();
-  const { user } = useGlobalContext()
+  const { user, refreshTrigger, setRefreshTrigger } = useGlobalContext()
   const [searchQuery, setSearchQuery] = useState('');
-  const [orderBy, setOrderBy] = useState('asc');
+  const [orderBy, setOrderBy] = useState('desc');
   const [dataEmployee, setDataEmployee] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -54,6 +52,7 @@ const Employee = () => {
 
         if (response.code) {
           if (response.code === 200) {
+            setRefreshTrigger(false);
             setDataEmployee(response.data.rows);
             setIsLoading(false);
           }
@@ -65,7 +64,7 @@ const Employee = () => {
       }
     };
     getData();
-  }, [refetchTrigger, searchQuery, isFocused, orderBy]);
+  }, [refetchTrigger, searchQuery, refreshTrigger, orderBy]);
 
   const renderEmptyComponent = () => {
     if (isLoading) {

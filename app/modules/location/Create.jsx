@@ -8,22 +8,39 @@ import { API_HOST } from '@env';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { useNavigation } from '@react-navigation/native'
+import AlertModal from '../../../components/AlertModal'
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().required('*nama toko wajib diisi'),
   address: Yup.string().required('*alamat toko wajib diisi'),
-  phone: Yup.string().min(10, '*nomor handphone minimal 10 angka').required('*nomor handphone wajib diisi'),
+  phone: Yup.string().min(10, '*nomor handphone minimal 10 angka').required('*nomor handphone wajib diisi').matches(/^[0-9]+$/, '*nomor handphone harus berupa angka'),
 });
 
 const Create = () => {
   const navigation = useNavigation()
-  const { user } = useGlobalContext()
+  const { user, setRefreshTrigger } = useGlobalContext()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [initialValues] = useState({
     name: '',
     address: '',
     phone: '',
   });
+
+  /* Alert */
+  const [isAlertVisible, setIsAlertVisible] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
+  const [alertTitle, setAlertTitle] = useState('');
+  const showAlert = (title, message) => {
+    setAlertTitle(title);
+    setAlertMessage(message);
+    setIsAlertVisible(true);
+  };
+  const closeAlert = () => {
+    setIsAlertVisible(false);
+    setRefreshTrigger(true)
+    navigation.navigate('LocationStoreStack', {screen: 'LocationStoreStack'})
+  };
+  /* End Alert */
 
   const submitAction = async (form) => {
     try {
@@ -44,8 +61,7 @@ const Create = () => {
 
       if (response.code) {
         if (response.code === 200) {
-          Alert.alert('Notifikasi', 'Lokasi toko anda berhasil ditambah.')
-          navigation.navigate('LocationStore')
+          showAlert('Notifikasi', 'Lokasi toko anda berhasil ditambah.');
         }
       } else {
         Alert.alert(response.message)
@@ -60,6 +76,7 @@ const Create = () => {
   return (
     <ScrollView className="bg-primary">
       <View className="w-full justify-center px-4 bg-primary mt-5">
+        <AlertModal visible={isAlertVisible} header={alertTitle} message={alertMessage} onClose={closeAlert} />
         <Formik
           initialValues={initialValues}
           validationSchema={validationSchema}
@@ -97,6 +114,7 @@ const Create = () => {
                 handleChangeText={handleChange('phone')}
                 handleBlur={handleBlur('phone')}
                 otherStyles="mt-2"
+                keyboardType="number-pad"
                 testId="txt003"
               />
               {touched.phone && errors.phone && <Text className="text-gray-50">{errors.phone}</Text>}

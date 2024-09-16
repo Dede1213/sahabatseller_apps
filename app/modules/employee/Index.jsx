@@ -1,15 +1,12 @@
-import { Alert, ScrollView, StyleSheet, Text, View } from 'react-native'
+import { ScrollView, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { TouchableOpacity } from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useGlobalContext } from '../../../context/globalProvider'
 import { useNavigation } from '@react-navigation/native';
-import * as SecureStore from 'expo-secure-store';
-import { useIsFocused } from '@react-navigation/native';
 
 const Index = () => {
     const navigation = useNavigation();
-    const isFocused = useIsFocused();
     const { user, setUser, setIsLoggedIn } = useGlobalContext()
     const moduleAccess = user?.module_access;
     const moduleAccessArray = moduleAccess ? moduleAccess.split(',').map(Number) : [];

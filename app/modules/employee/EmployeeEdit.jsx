@@ -10,13 +10,14 @@ import * as Yup from 'yup';
 import { useNavigation } from '@react-navigation/native'
 import SelectField from '../../../components/SelectField'
 import { useRoute } from '@react-navigation/native';
-import { ConfirmAlert } from '../../../lib/globalFunction'
+import AlertConfirmModal from '../../../components/AlertConfirmModal'
+import AlertModal from '../../../components/AlertModal'
 
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().required('*nama toko wajib diisi'),
   email: Yup.string().email('*email tidak valid').required('*email wajib diisi'),
-  phone: Yup.string().min(10, '*nomor handphone minimal 10 angka').required('*nomor telepon toko wajib diisi'),
+  phone: Yup.string().min(10, '*nomor handphone minimal 10 angka').required('*nomor handphone toko wajib diisi').matches(/^[0-9]+$/, '*nomor handphone harus berupa angka'),
   location: Yup.string().required('*lokasi toko wajib diisi'),
   role: Yup.string().required('*role toko wajib diisi'),
 });
@@ -26,12 +27,45 @@ const EmployeeEdit = () => {
   const { id } = route.params;
 
   const navigation = useNavigation()
-  const { user } = useGlobalContext()
+  const { user, setRefreshTrigger } = useGlobalContext()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [dataLocation, setDataLocation] = useState([])
   const [dataRole, setDataRole] = useState([])
-  const [isDeleting, setIsDeleting] = useState(false)
 
+  /* Alert Confirm */
+  const [isAlertConfirmVisible, setIsAlertConfirmVisible] = useState(false);
+  const [alertConfirmMessage, setAlertConfirmMessage] = useState('');
+  const [alertConfirmTitle, setAlertConfirmTitle] = useState('');
+  const showAlertConfirm = (title, message) => {
+    setAlertConfirmTitle(title);
+    setAlertConfirmMessage(message);
+    setIsAlertConfirmVisible(true);
+  };
+  const closeAlertConfirm = () => {
+    setIsAlertConfirmVisible(false);
+  };
+
+  const acceptAlertConfirm = () => {
+    setIsAlertConfirmVisible(false);
+    handleDelete();
+  };
+  /* End Alert */
+
+  /* Alert */
+  const [isAlertVisible, setIsAlertVisible] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
+  const [alertTitle, setAlertTitle] = useState('');
+  const showAlert = (title, message) => {
+    setAlertTitle(title);
+    setAlertMessage(message);
+    setIsAlertVisible(true);
+  };
+  const closeAlert = () => {
+    setIsAlertVisible(false);
+    setRefreshTrigger(true)
+    navigation.navigate('Employee', { screen: 'EmployeeViewStack' })
+  };
+  /* End Alert */
 
   const [initialValues, setInitialValues] = useState({
     name: '',
@@ -159,8 +193,7 @@ const EmployeeEdit = () => {
 
       if (response.code) {
         if (response.code === 200) {
-          Alert.alert('Notifikasi', 'Pegawai anda berhasil diubah.')
-          navigation.navigate('Employee', { screen: 'EmployeeViewStack' })
+          showAlert('Notifikasi', 'Pegawai anda berhasil diubah.');
         }
       } else {
         Alert.alert(response.message)
@@ -174,7 +207,7 @@ const EmployeeEdit = () => {
 
   const handleDelete = async () => {
     try {
-      setIsDeleting(true)
+      setIsSubmitting(true)
       const response = await fetchData(`${API_HOST}/user/delete/${id}`, {
         method: 'delete',
         headers: {
@@ -186,8 +219,7 @@ const EmployeeEdit = () => {
 
       if (response.code) {
         if (response.code === 200) {
-          Alert.alert('Notifikasi', 'Pegawai berhasil dihapus.')
-          navigation.navigate('Employee', { screen: 'EmployeeViewStack' })
+          showAlert('Notifikasi', 'Pegawai berhasil dihapus.');
         }
       } else {
         Alert.alert(response.message)
@@ -195,13 +227,15 @@ const EmployeeEdit = () => {
     } catch (error) {
       Alert.alert(error.message)
     } finally {
-      setIsDeleting
+      setIsSubmitting(false)
     }
   };
 
   return (
     <ScrollView className="bg-primary">
       <View className="w-full justify-center px-4 bg-primary mt-5">
+        <AlertConfirmModal visible={isAlertConfirmVisible} header={alertConfirmTitle} message={alertConfirmMessage} onClose={closeAlertConfirm} onAccept={acceptAlertConfirm} />
+        <AlertModal visible={isAlertVisible} header={alertTitle} message={alertMessage} onClose={closeAlert} />
         <Formik
           initialValues={initialValues}
           validationSchema={validationSchema}
@@ -239,6 +273,7 @@ const EmployeeEdit = () => {
                 handleChangeText={handleChange('phone')}
                 handleBlur={handleBlur('phone')}
                 otherStyles="mt-2"
+                keyboardType="number-pad"
                 testId="txt003"
               />
               {touched.phone && errors.phone && <Text className="text-gray-50">{errors.phone}</Text>}
@@ -283,7 +318,7 @@ const EmployeeEdit = () => {
                 {values.is_owner == "TIDAK" &&
                   <CustomButton
                     title="Hapus Pegawai"
-                    handlePress={() => ConfirmAlert("Konfirmasi", "Apakah Anda yakin ingin menghapus pegawai ini?", handleDelete)}
+                    handlePress={() => showAlertConfirm('Konfirmasi', 'Apakah Anda yakin ingin menghapus pegawai ini?')}
                     containerStyles={"mt-2"}
                     isLoading={isSubmitting}
                     textStyles={"color-red-500 underline"}

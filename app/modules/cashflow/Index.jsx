@@ -1,21 +1,34 @@
-import { Alert, ScrollView, StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import { ScrollView, StyleSheet, Text, View } from 'react-native'
+import React, { useState } from 'react'
 import { TouchableOpacity } from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useGlobalContext } from '../../../context/globalProvider'
 import { useNavigation } from '@react-navigation/native';
-import * as SecureStore from 'expo-secure-store';
-import { useIsFocused } from '@react-navigation/native';
+import AlertModal from '../../../components/AlertModal';
 
 const Index = () => {
     const navigation = useNavigation();
-    const isFocused = useIsFocused();
-    const { user, setUser, setIsLoggedIn } = useGlobalContext()
+    const { user} = useGlobalContext()
     const moduleAccess = user?.module_access;
     const moduleAccessArray = moduleAccess ? moduleAccess.split(',').map(Number) : [];
 
+    /* Alert */
+    const [isAlertVisible, setIsAlertVisible] = useState(false);
+    const [alertMessage, setAlertMessage] = useState('');
+    const [alertTitle, setAlertTitle] = useState('');
+    const showAlert = (title, message) => {
+        setAlertTitle(title);
+        setAlertMessage(message);
+        setIsAlertVisible(true);
+    };
+    const closeAlert = () => {
+        setIsAlertVisible(false);
+    };
+    /* End Alert */
+
     return (
         <View className="flex-1 bg-white">
+            <AlertModal visible={isAlertVisible} header={alertTitle} message={alertMessage} onClose={closeAlert} />
             <ScrollView className="flex-1">
                 <TouchableOpacity
                     className="border-b border-gray-200 px-4 py-4"
@@ -40,7 +53,7 @@ const Index = () => {
                                     screen: 'CatFlowViewStack'
                                 })
                             } else {
-                                Alert.alert('Lokasi anda bukan pusat.')
+                                showAlert('Warning!', 'Lokasi anda bukan pusat.');
                             }
                         }}
                     >

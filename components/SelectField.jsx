@@ -1,13 +1,17 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Alert } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
-import AntDesign from '@expo/vector-icons/AntDesign';
 import { TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 
-const SelectField = ({ title, data, value, onValueChange, otherStyles, placeholder, handleChangeText, handleBlur, info, dropdownPosition, testId }) => {
+const SelectField = ({ title, data, value, onValueChange, otherStyles, placeholder, handleChangeText, handleBlur, info, dropdownPosition, testId, disable }) => {
     const [isFocus, setIsFocus] = useState(false);
+    const dataBoolean = [
+        { label: 'TIDAK', value: 'TIDAK' },
+        { label: 'YA', value: 'YA' },
+      ];
+
     return (
         <View className={`space-y-2 ${otherStyles}`}>
             <View className="flex-row">
@@ -23,14 +27,15 @@ const SelectField = ({ title, data, value, onValueChange, otherStyles, placehold
 
                 <Dropdown
                     testID={testId ? testId : ''}
+                    disable={disable}
                     dropdownPosition={dropdownPosition ? dropdownPosition : "bottom"}
-                    style={[styles.dropdown, isFocus && { borderColor: '#1a7dcf' }]}
+                    style={[styles.dropdown, isFocus && { borderColor: '#1a7dcf' }, disable && { backgroundColor: '#e5e7eb' }]}
                     placeholderStyle={styles.placeholderStyle}
                     selectedTextStyle={styles.selectedTextStyle}
                     inputSearchStyle={styles.inputSearchStyle}
                     iconStyle={styles.iconStyle}
                     itemTextStyle={styles.itemTextStyle}
-                    data={data}
+                    data={data ? data : dataBoolean}
                     search
                     maxHeight={300}
                     labelField="label"
@@ -50,12 +55,7 @@ const SelectField = ({ title, data, value, onValueChange, otherStyles, placehold
                         setIsFocus(false);
                     }}
                     renderLeftIcon={() => (
-                        <AntDesign
-                            style={styles.icon}
-                            color={isFocus ? '#1a7dcf' : '#494952'}
-                            name="Safety"
-                            size={20}
-                        />
+                        <Icon name="arrow-down-bold-box-outline" color="gray" size={23} testID="mn001" style={{ marginRight: 5 }} />
                     )}
                 />
             </View>

@@ -83,7 +83,7 @@ const CustomDrawerContent = (props) => {
         {moduleAccessArray.includes(3) && (
           <DrawerItem
             label="Kelola Produk"
-            onPress={() => { }}
+            onPress={() => { navigation.navigate('Item', { screen: 'ItemStack' }) }}
             icon={() => <Icon name="package-variant-closed" color="gray" size={25} />}
             labelStyle={{ marginLeft: -20, color: '#494952', fontFamily: 'PoppinsRegular', marginTop: 5 }}
             style={{ marginTop: -15 }}
@@ -104,6 +104,17 @@ const CustomDrawerContent = (props) => {
 
         {moduleAccessArray.includes(5) && (
           <DrawerItem
+            label="Promosi"
+            onPress={() => { navigation.navigate('Promotion', { screen: 'PromotionStack' }) }}
+            icon={() => <Icon name="brightness-percent" color="gray" size={25} />}
+            labelStyle={{ marginLeft: -20, color: '#494952', fontFamily: 'PoppinsRegular', marginTop: 5 }}
+            style={{ marginTop: -15 }}
+            testID="mn007"
+          />
+        )}
+
+        {/* {moduleAccessArray.includes(5) && (
+          <DrawerItem
             label="Riwayat Transaksi"
             onPress={() => { }}
             icon={() => <Icon name="text-box-search-outline" color="gray" size={25} />}
@@ -111,7 +122,7 @@ const CustomDrawerContent = (props) => {
             style={{ marginTop: -15 }}
             testID="mn007"
           />
-        )}
+        )} */}
 
         {moduleAccessArray.includes(6) && (
           <DrawerItem

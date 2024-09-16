@@ -10,6 +10,11 @@ const GlobalProvider = ({ children }) => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [user, setUser] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
+    const [refreshTrigger, setRefreshTrigger] = useState(false);
+    const [itemId, setItemId] = useState('');
+    const [variantId, setVariantId] = useState('');
+    const [itemName, setItemName] = useState('');
+    const [variantName, setVariantName] = useState('');
 
     const loadUserData = async () => {
         const storedTokenUser = await SecureStore.getItemAsync('userToken');
@@ -34,6 +39,8 @@ const GlobalProvider = ({ children }) => {
                 setIsLoggedIn(false);
                 setUser(null);
                 setIsLoading(false);
+                setRefreshTrigger(false);
+                setItemId(0);
             }
         } else {
             setIsLoggedIn(false);
@@ -52,7 +59,17 @@ const GlobalProvider = ({ children }) => {
             setIsLoggedIn,
             user,
             setUser,
-            isLoading
+            isLoading,
+            setRefreshTrigger,
+            refreshTrigger,
+            itemId,
+            setItemId,
+            variantId,
+            setVariantId,
+            itemName,
+            setItemName,
+            variantName,
+            setVariantName
         }}>{children}</GlobalContext.Provider>
     )
 }

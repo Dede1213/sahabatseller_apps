@@ -9,6 +9,12 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { useNavigation } from '@react-navigation/native'
 import SelectField from '../../../../components/SelectField'
+import AlertModal from '../../../../components/AlertModal'
+import DateTimePicker from '@react-native-community/datetimepicker';
+import { TouchableOpacity } from 'react-native'
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { FormatDateForQuery } from '../../../../lib/globalFunction'
+
 
 const validationSchema = Yup.object().shape({
   category: Yup.string().required('*kategori toko wajib diisi'),
@@ -17,18 +23,37 @@ const validationSchema = Yup.object().shape({
 });
 
 const Create = () => {
+
   const navigation = useNavigation()
-  const { user } = useGlobalContext()
+  const { user, setRefreshTrigger } = useGlobalContext()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [refreshing, setRefreshing] = useState(false);
   const [refetchTrigger, setRefetchTrigger] = useState(0);
   const [dataCategory, setDataCategory] = useState([])
+  const [showDatePicker, setShowDatePicker] = useState(false);
+
+  /* Alert */
+  const [isAlertVisible, setIsAlertVisible] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
+  const [alertTitle, setAlertTitle] = useState('');
+  const showAlert = (title, message) => {
+    setAlertTitle(title);
+    setAlertMessage(message);
+    setIsAlertVisible(true);
+  };
+  const closeAlert = () => {
+    setIsAlertVisible(false);
+    setRefreshTrigger(true)
+    navigation.navigate('CashFlow', { screen: 'CashFlowViewStack' })
+  };
+  /* End Alert */
 
   const [initialValues] = useState({
     category: '',
     type: '',
     amount: '',
     note: '',
+    transaction_date: new Date(),
   });
 
   const onRefresh = () => {
@@ -84,13 +109,13 @@ const Create = () => {
           types: form.type,
           amount: parseInt(form.amount),
           note: form.note,
+          transaction_date: FormatDateForQuery(form.transaction_date),
         },
       });
 
       if (response.code) {
         if (response.code === 200) {
-          Alert.alert('Notifikasi', 'Cash flow berhasil ditambah.')
-          navigation.navigate('CashFlow', { screen: 'CashFlowViewStack' })
+          showAlert('Notifikasi', 'Cash flow berhasil ditambah.');
         }
       } else {
         Alert.alert(response.message)
@@ -110,6 +135,7 @@ const Create = () => {
   return (
     <ScrollView className="bg-primary" refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
       <View className="w-full justify-center px-4 bg-primary mt-5">
+        <AlertModal visible={isAlertVisible} header={alertTitle} message={alertMessage} onClose={closeAlert} />
         <Formik
           initialValues={initialValues}
           validationSchema={validationSchema}
@@ -148,14 +174,44 @@ const Create = () => {
               />
               {touched.type && errors.type && <Text className="text-gray-50">{errors.type}</Text>}
 
+              <View className={`space-y-2 mt-3`}>
+                <Text className="text-base font-PoppinsMedium text-gray-100">Tanggal :</Text>
+                <View className='flex-row'>
+                  <View className="w-full">
+                    <TouchableOpacity onPress={() => setShowDatePicker(true)}>
+                      <View className={`border-2 border-gray-200 w-full px-2 rounded-lg focus:border-secondary items-center flex-row`}>
+                        <View className="flex-1 py-3">
+                          <Text className="text-gray-100 font-poppinsSemiBold text-m">
+                            {values.transaction_date ? (values.transaction_date).toLocaleDateString() : (new Date()).toLocaleDateString()}
+                          </Text>
+                        </View>
+                        <Icon name="calendar-month" color="gray" size={20} testID="txt003" />
+                      </View>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </View>
+
+              {showDatePicker && (
+                <DateTimePicker
+                  value={values.transaction_date ? values.transaction_date : new Date()}
+                  mode="date"
+                  display="default"
+                  onChange={(event, selectedDate) => {
+                    setShowDatePicker(false);
+                    setFieldValue('transaction_date', selectedDate);
+                  }}
+                />
+              )}
+
               <FormField
                 title="Nominal"
                 value={values.amount}
                 handleChangeText={handleChange('amount')}
                 handleBlur={handleBlur('amount')}
                 otherStyles="mt-3"
-                testId="txt003"
-                keyboardType="numeric"
+                testId="txt004"
+                keyboardType="number-pad"
               />
               {touched.amount && errors.amount && <Text className="text-gray-50">{errors.amount}</Text>}
 
@@ -165,7 +221,7 @@ const Create = () => {
                 handleChangeText={handleChange('note')}
                 handleBlur={handleBlur('note')}
                 otherStyles="mt-3"
-                testId="txt004"
+                testId="txt005"
               />
               {touched.note && errors.note && <Text className="text-gray-50">{errors.note}</Text>}
 

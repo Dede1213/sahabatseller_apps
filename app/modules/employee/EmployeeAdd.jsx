@@ -9,19 +9,20 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { useNavigation } from '@react-navigation/native'
 import SelectField from '../../../components/SelectField'
+import AlertModal from '../../../components/AlertModal'
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().required('*nama toko wajib diisi'),
   email: Yup.string().email('*email tidak valid').required('*email wajib diisi'),
-  phone: Yup.string().min(10, '*nomor handphone minimal 10 angka').required('*nomor telepon toko wajib diisi'),
+  phone: Yup.string().min(10, '*nomor handphone minimal 10 angka').required('*nomor handphone toko wajib diisi').matches(/^[0-9]+$/, '*nomor handphone harus berupa angka'),
   password: Yup.string().min(6, '*password minimal 6 characters').required('*password wajib diisi.'),
   location: Yup.string().required('*lokasi toko wajib diisi'),
   role: Yup.string().required('*role toko wajib diisi'),
 });
 
-const EmployeeAdd = () => { 
+const EmployeeAdd = () => {
   const navigation = useNavigation()
-  const { user } = useGlobalContext()
+  const { user, setRefreshTrigger } = useGlobalContext()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [refreshing, setRefreshing] = useState(false);
   const [refetchTrigger, setRefetchTrigger] = useState(0);
@@ -36,6 +37,22 @@ const EmployeeAdd = () => {
     location: '',
     role: ''
   });
+
+  /* Alert */
+  const [isAlertVisible, setIsAlertVisible] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
+  const [alertTitle, setAlertTitle] = useState('');
+  const showAlert = (title, message) => {
+    setAlertTitle(title);
+    setAlertMessage(message);
+    setIsAlertVisible(true);
+  };
+  const closeAlert = () => {
+    setIsAlertVisible(false);
+    setRefreshTrigger(true)
+    navigation.navigate('Employee', { screen: 'EmployeeViewStack' })
+  };
+  /* End Alert */
 
   const onRefresh = () => {
     setRefreshing(true);
@@ -86,7 +103,7 @@ const EmployeeAdd = () => {
           });
         if (response.code) {
           if (response.code === 200) {
-            const formattedData = response.data.map(item => ({ 
+            const formattedData = response.data.map(item => ({
               label: item.title,
               value: item.id,
             }));
@@ -126,8 +143,7 @@ const EmployeeAdd = () => {
 
       if (response.code) {
         if (response.code === 200) {
-          Alert.alert('Notifikasi', 'Pegawai anda berhasil ditambah.')
-          navigation.navigate('Employee', { screen: 'EmployeeViewStack' })
+          showAlert('Notifikasi', 'Pegawai anda berhasil ditambah.');
         }
       } else {
         Alert.alert(response.message)
@@ -142,6 +158,7 @@ const EmployeeAdd = () => {
   return (
     <ScrollView className="bg-primary" refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
       <View className="w-full justify-center px-4 bg-primary mt-5">
+        <AlertModal visible={isAlertVisible} header={alertTitle} message={alertMessage} onClose={closeAlert} />
         <Formik
           initialValues={initialValues}
           validationSchema={validationSchema}
@@ -179,6 +196,7 @@ const EmployeeAdd = () => {
                 handleChangeText={handleChange('phone')}
                 handleBlur={handleBlur('phone')}
                 otherStyles="mt-2"
+                keyboardType="number-pad"
                 testId="txt003"
               />
               {touched.phone && errors.phone && <Text className="text-gray-50">{errors.phone}</Text>}
@@ -237,9 +255,9 @@ const EmployeeAdd = () => {
         <View className="w-full mt-10" />
 
       </View >
-      
+
     </ScrollView >
-    
+
   )
 }
 

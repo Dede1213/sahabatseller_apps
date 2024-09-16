@@ -9,6 +9,7 @@ import { Formik, FieldArray } from 'formik';
 import * as Yup from 'yup';
 import { useNavigation } from '@react-navigation/native'
 import CheckBox from '@react-native-community/checkbox';
+import AlertModal from '../../../components/AlertModal'
 
 const validationSchema = Yup.object().shape({
   title: Yup.string().required('*nama hak akses wajib diisi'),
@@ -17,13 +18,29 @@ const validationSchema = Yup.object().shape({
 
 const RoleAdd = () => {
   const navigation = useNavigation()
-  const { user } = useGlobalContext()
+  const { user, setRefreshTrigger } = useGlobalContext()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [dataModule, setDataModule] = useState([]);
   const [initialValues] = useState({
     title: '',
     module_id: '',
   });
+
+  /* Alert */
+  const [isAlertVisible, setIsAlertVisible] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
+  const [alertTitle, setAlertTitle] = useState('');
+  const showAlert = (title, message) => {
+    setAlertTitle(title);
+    setAlertMessage(message);
+    setIsAlertVisible(true);
+  };
+  const closeAlert = () => {
+    setIsAlertVisible(false);
+    setRefreshTrigger(true)
+    navigation.navigate('Employee', { screen: 'RoleViewStack' })
+  };
+  /* End Alert */
 
   useEffect(() => {
     const getDataModules = async () => {
@@ -71,8 +88,7 @@ const RoleAdd = () => {
 
       if (response.code) {
         if (response.code === 200) {
-          Alert.alert('Notifikasi', 'Hak akses berhasil ditambah.')
-          navigation.navigate('Employee', { screen: 'RoleViewStack' })
+          showAlert('Notifikasi', 'Hak akses berhasil ditambah.');
         }
       } else {
         Alert.alert(response.message)
@@ -87,6 +103,7 @@ const RoleAdd = () => {
   return (
     <ScrollView className="bg-primary">
       <View className="w-full justify-center px-4 bg-primary mt-5">
+        <AlertModal visible={isAlertVisible} header={alertTitle} message={alertMessage} onClose={closeAlert} />
         <Formik
           initialValues={initialValues}
           validationSchema={validationSchema}
@@ -114,7 +131,7 @@ const RoleAdd = () => {
                 name="module_id"
                 render={({ push, remove }) => (
                   <>
-                    {dataModule.map((option, index) => (
+                    {dataModule?.map((option, index) => (
                       <View key={option.id} style={styles.checkboxContainer}>
                         <CheckBox
                           value={values.module_id.includes(option.id)}

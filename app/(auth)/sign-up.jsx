@@ -9,10 +9,26 @@ import { fetchData } from '../../lib/fetchData'
 import { API_HOST } from '@env';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
+import AlertModal from '../../components/AlertModal'
 
 const SignUp = ({ navigation }) => {
 
   const { isLoading, isLoggedIn } = useGlobalContext()
+
+  /* Alert */
+  const [isAlertVisible, setIsAlertVisible] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
+  const [alertTitle, setAlertTitle] = useState('');
+  const showAlert = (title, message) => {
+    setAlertTitle(title);
+    setAlertMessage(message);
+    setIsAlertVisible(true);
+  };
+  const closeAlert = () => {
+    setIsAlertVisible(false);
+    navigation.navigate('SignIn')
+  };
+  /* End Alert */
 
   useEffect(() => {
     if (!isLoading && isLoggedIn) {
@@ -39,8 +55,7 @@ const SignUp = ({ navigation }) => {
       });
 
       if (response.code === 200) {
-        Alert.alert("Notifikasi", "akun anda berhasil dibuat.")
-        navigation.navigate('SignIn')
+        showAlert('Notifikasi', 'Akun anda berhasil dibuat.');
       }
     } catch (error) {
       Alert.alert("Warning", error.message)
@@ -54,17 +69,18 @@ const SignUp = ({ navigation }) => {
     password: Yup.string().min(6, '*password minimal 6 characters').required('*password wajib diisi.'),
     fullname: Yup.string().required('*fullname wajib diisi'),
     email: Yup.string().email('*email tidak valid').required('*email wajib diisi'),
-    phone: Yup.string().min(10, '*nomor handphone minimal 10 angka').required('*nomor handphone wajib diisi'),
+    phone: Yup.string().min(10, '*nomor handphone minimal 10 angka').required('*nomor handphone wajib diisi').matches(/^[0-9]+$/, '*nomor handphone harus berupa angka'),
     password: Yup.string().min(6, '*password minimal 6 characters').required('*password wajib diisi'),
     store_name: Yup.string().required('*nama toko wajib diisi'),
     store_address: Yup.string().required('*alamat toko wajib diisi'),
-    affiliator_id: Yup.string().required('*affiliator id wajib diisi'),
   });
 
   return (
     <SafeAreaView className="bg-primary h-full">
       <ScrollView>
         <View className="w-full min-h-[85vh] justify-center px-4 my-5">
+          <AlertModal visible={isAlertVisible} header={alertTitle} message={alertMessage} onClose={closeAlert} />
+
           <View className="">
             <Image source={images.logotext} className="w-[200px] h-[60px]" resizeMode='contain' />
           </View>
@@ -150,7 +166,9 @@ const SignUp = ({ navigation }) => {
                 {touched.store_address && errors.store_address && <Text className="text-gray-50" testID='txt012'>{errors.store_address}</Text>}
 
                 <FormField
+                  info={'Affiliator adalah partner sahabatseller yang siap menjawab semua pertanyaan anda terkait aplikasi, selain customer service.'}
                   title="Kode Affiliator"
+                  placeholder="Jika Ada"
                   value={values.affiliator_id}
                   handleChangeText={handleChange('affiliator_id')}
                   handleBlur={handleBlur('affiliator_id')}

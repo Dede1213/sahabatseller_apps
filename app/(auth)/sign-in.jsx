@@ -53,7 +53,7 @@ const SignIn = ({ navigation }) => {
 
   const validationSchema = Yup.object().shape({
     username: Yup.string().required('*username wajib diisi'),
-    password: Yup.string().min(6, '*password minimal 6 characters').required('*password wajib diisi.'),
+    password: Yup.string().min(1, '*password minimal 6 characters').required('*password wajib diisi.'),
   });
 
   return (

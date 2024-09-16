@@ -10,7 +10,8 @@ import * as Yup from 'yup';
 import { useNavigation } from '@react-navigation/native'
 import CheckBox from '@react-native-community/checkbox';
 import { useRoute } from '@react-navigation/native';
-import { ConfirmAlert } from '../../../lib/globalFunction'
+import AlertConfirmModal from '../../../components/AlertConfirmModal'
+import AlertModal from '../../../components/AlertModal'
 
 const validationSchema = Yup.object().shape({
   title: Yup.string().required('*nama hak akses wajib diisi'),
@@ -25,12 +26,45 @@ const RoleEdit = () => {
   const { user } = useGlobalContext()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [dataModule, setDataModule] = useState([]);
-  const [isDeleting, setIsDeleting] = useState(false)
   const [initialValues, setInitialValues] = useState({
     title: '',
     module_id: '',
     is_owner: ''
   });
+
+  /* Alert Confirm */
+  const [isAlertConfirmVisible, setIsAlertConfirmVisible] = useState(false);
+  const [alertConfirmMessage, setAlertConfirmMessage] = useState('');
+  const [alertConfirmTitle, setAlertConfirmTitle] = useState('');
+  const showAlertConfirm = (title, message) => {
+    setAlertConfirmTitle(title);
+    setAlertConfirmMessage(message);
+    setIsAlertConfirmVisible(true);
+  };
+  const closeAlertConfirm = () => {
+    setIsAlertConfirmVisible(false);
+    navigation.navigate('Employee', { screen: 'RoleViewStack' })
+  };
+
+  const acceptAlertConfirm = () => {
+    setIsAlertConfirmVisible(false);
+    handleDelete();
+  };
+  /* End Alert */
+
+  /* Alert */
+  const [isAlertVisible, setIsAlertVisible] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
+  const [alertTitle, setAlertTitle] = useState('');
+  const showAlert = (title, message) => {
+    setAlertTitle(title);
+    setAlertMessage(message);
+    setIsAlertVisible(true);
+  };
+  const closeAlert = () => {
+    setIsAlertVisible(false);
+  };
+  /* End Alert */
 
   useEffect(() => {
     const getDataModules = async () => {
@@ -108,8 +142,7 @@ const RoleEdit = () => {
 
       if (response.code) {
         if (response.code === 200) {
-          Alert.alert('Notifikasi', 'Hak akses berhasil diubah.')
-          navigation.navigate('Employee', { screen: 'RoleViewStack' })
+          showAlert('Notifikasi', 'Hak akses berhasil diubah.');
         }
       } else {
         Alert.alert(response.message)
@@ -123,7 +156,7 @@ const RoleEdit = () => {
 
   const handleDelete = async () => {
     try {
-      setIsDeleting(true)
+      setIsSubmitting(true)
       const response = await fetchData(`${API_HOST}/roles/delete/${id}`, {
         method: 'delete',
         headers: {
@@ -135,8 +168,7 @@ const RoleEdit = () => {
 
       if (response.code) {
         if (response.code === 200) {
-          Alert.alert('Notifikasi', 'Hak akses berhasil dihapus.')
-          navigation.navigate('Employee', { screen: 'RoleViewStack' })
+          showAlert('Notifikasi', 'Hak akses berhasil dihapus.');
         }
       } else {
         Alert.alert(response.message)
@@ -144,13 +176,15 @@ const RoleEdit = () => {
     } catch (error) {
       Alert.alert(error.message)
     } finally {
-      setIsDeleting
+      setIsSubmitting
     }
   };
 
   return (
     <ScrollView className="bg-primary">
       <View className="w-full justify-center px-4 bg-primary mt-5">
+        <AlertConfirmModal visible={isAlertConfirmVisible} header={alertConfirmTitle} message={alertConfirmMessage} onClose={closeAlertConfirm} onAccept={acceptAlertConfirm} />
+        <AlertModal visible={isAlertVisible} header={alertTitle} message={alertMessage} onClose={closeAlert} />
         <Formik
           initialValues={initialValues}
           validationSchema={validationSchema}
@@ -178,7 +212,7 @@ const RoleEdit = () => {
                 name="module_id"
                 render={({ push, remove }) => (
                   <>
-                    {dataModule.map((option, index) => (
+                    {dataModule?.map((option, index) => (
                       <View key={option.id} style={styles.checkboxContainer}>
                         <CheckBox
                           value={values.module_id.includes(option.id)}
@@ -215,7 +249,7 @@ const RoleEdit = () => {
                 {values.is_owner == "TIDAK" &&
                   <CustomButton
                     title="Hapus Pegawai"
-                    handlePress={() => ConfirmAlert("Konfirmasi", "Apakah Anda yakin ingin menghapus hak akses ini?", handleDelete)}
+                    handlePress={() => showAlertConfirm('Konfirmasi', 'Apakah Anda yakin ingin menghapus hak akses ini?')}
                     containerStyles={"mt-2"}
                     isLoading={isSubmitting}
                     textStyles={"color-red-500 underline"}

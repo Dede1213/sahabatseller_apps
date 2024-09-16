@@ -3,10 +3,13 @@ import React, { useState } from 'react'
 import { icons } from '../constants'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-const SearchInput = ({ searchQuery, setSearchQuery, orderBy, setOrderBy, filter, setFilter, placeholder, setIsloading, searchStyle, txtId, btnId }) => {
+const SearchInput = ({ searchQuery, setSearchQuery, orderBy, setOrderBy, setModalVisible, placeholder, setIsloading, searchStyle, txtId, btnId, setData }) => {
     const [inputText, setInputText] = useState('');
     const handleSubmit = () => {
         setIsloading(true);
+        if (setData) {
+            setData([]);
+        }
         setSearchQuery(inputText);
     };
     return (
@@ -36,7 +39,7 @@ const SearchInput = ({ searchQuery, setSearchQuery, orderBy, setOrderBy, filter,
                     </View>
                 </TouchableOpacity>
             </View>
-            {orderBy && !filter && <TouchableOpacity
+            {orderBy && !setModalVisible && <TouchableOpacity
                 onPress={() => {
                     setIsloading(true);
                     if (orderBy === 'asc') {
@@ -51,14 +54,9 @@ const SearchInput = ({ searchQuery, setSearchQuery, orderBy, setOrderBy, filter,
                 </View>
             </TouchableOpacity>}
 
-            {filter && <TouchableOpacity
+            {setModalVisible && <TouchableOpacity
                 onPress={() => {
-                    setIsloading(true);
-                    if (orderBy === 'asc') {
-                        setOrderBy('desc');
-                    } else {
-                        setOrderBy('asc');
-                    }
+                    setModalVisible(true);
                 }}
             >
                 <View className="flex-row items-center justify-center ml-3 mt-4">
