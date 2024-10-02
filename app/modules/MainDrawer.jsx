@@ -68,6 +68,13 @@ import DiscountIndex from './promotion/discount/Index';
 import DiscountCreate from './promotion/discount/Create';
 import DiscountEdit from './promotion/discount/Edit';
 
+import TransactionIndex from './transaction/Index';
+import TransactionCreate from './transaction/create/Index';
+import TransactionHistory from './transaction/history/Index';
+import TransactionDetail from './transaction/history/Detail';
+import TransactionVariant from './transaction/create/Variant';
+import TransactionCart from './transaction/create/Cart';
+
 const CustomHeaderLeft = ({ onPress }) => (
   <TouchableOpacity onPress={onPress} className="ml-2">
     <Icon name="menu" color="#000" size={25} testID="open-drawer-button" />
@@ -98,6 +105,7 @@ const CustomerStack = createStackNavigator();
 const CashFlowStack = createStackNavigator();
 const ItemStack = createStackNavigator();
 const PromotionStack = createStackNavigator();
+const TransactionStack = createStackNavigator();
 
 function HomeStackNavigator() {
   return (
@@ -545,6 +553,59 @@ function PromotionStackNavigator({ navigation }) {
   );
 }
 
+function TransactionStackNavigator({ navigation }) {
+  return (
+    <TransactionStack.Navigator
+      screenOptions={{
+        headerStyle: styles.borderBottomStyle,
+      }}
+    >
+      <TransactionStack.Screen name="TransactionStack" component={TransactionIndex}
+        options={{
+          headerShown: true,
+          headerLeft: () => <CustomHeaderLeft onPress={() => navigation.openDrawer()} />,
+          headerTitle: 'Tambah Transaksi',
+        }}
+      />
+      <TransactionStack.Screen name="CreateTransactionStack" component={TransactionCreate}
+        options={{
+          headerShown: true,
+          headerLeft: () => <CustomHeaderLeftBack onPress={() => navigation.navigate('Transaction', { screen: 'TransactionStack' })} />,
+          headerTitle: 'Tambah Transaksi',
+        }}
+      />
+      <TransactionStack.Screen name="HistoryTransactionStack" component={TransactionHistory}
+        options={{
+          headerShown: true,
+          headerLeft: () => <CustomHeaderLeftBack onPress={() => navigation.navigate('Transaction', { screen: 'TransactionStack' })} />,
+          headerTitle: 'Riwayat Transaksi',
+        }}
+      />
+      <TransactionStack.Screen name="DetailTransactionStack" component={TransactionDetail}
+        options={{
+          headerShown: true,
+          headerLeft: () => <CustomHeaderLeftBack onPress={() => navigation.navigate('Transaction', { screen: 'DetailTransactionStack' })} />,
+          headerTitle: 'Detail Transaksi',
+        }}
+      />
+      <TransactionStack.Screen name="VariantTransactionStack" component={TransactionVariant}
+        options={{
+          headerShown: true,
+          headerLeft: () => <CustomHeaderLeftBack onPress={() => navigation.navigate('Transaction', { screen: 'CreateTransactionStack' })} />,
+          headerTitle: 'Tambah Transaksi',
+        }}
+      />
+      <TransactionStack.Screen name="CartTransactionStack" component={TransactionCart}
+        options={{
+          headerShown: true,
+          headerLeft: () => <CustomHeaderLeftBack onPress={() => navigation.navigate('Transaction', { screen: 'TransactionStack' })} />,
+          headerTitle: 'Keranjang Belanja',
+        }}
+      />
+    </TransactionStack.Navigator>
+  );
+}
+
 
 const Drawer = createDrawerNavigator();
 const MainDrawer = () => {
@@ -563,6 +624,7 @@ const MainDrawer = () => {
         <Drawer.Screen name="CashFlow" component={CashFlowStackNavigator} options={{ title: 'Arus Kas', headerShown: false }} />
         <Drawer.Screen name="Item" component={ItemStackNavigator} options={{ title: 'Kelola Produk', headerShown: false }} />
         <Drawer.Screen name="Promotion" component={PromotionStackNavigator} options={{ title: 'Promosi', headerShown: false }} />
+        <Drawer.Screen name="Transaction" component={TransactionStackNavigator} options={{ title: 'Transaksi', headerShown: false }} />
       </Drawer.Navigator>
       <StatusBar backgroundColor='#fff' className="dark" style="light" />
     </>

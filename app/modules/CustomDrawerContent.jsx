@@ -94,7 +94,7 @@ const CustomDrawerContent = (props) => {
         {moduleAccessArray.includes(4) && (
           <DrawerItem
             label="Transaksi"
-            onPress={() => { }}
+            onPress={() => { navigation.navigate('Transaction', { screen: 'TransactionStack' }) }}
             icon={() => <Icon name="calculator" color="gray" size={25} />}
             labelStyle={{ marginLeft: -20, color: '#494952', fontFamily: 'PoppinsRegular', marginTop: 5 }}
             style={{ marginTop: -15 }}

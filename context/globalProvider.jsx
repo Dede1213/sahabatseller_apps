@@ -15,6 +15,27 @@ const GlobalProvider = ({ children }) => {
     const [variantId, setVariantId] = useState('');
     const [itemName, setItemName] = useState('');
     const [variantName, setVariantName] = useState('');
+    const [transaction, setTransaction] = useState({
+        payment_type_id: '',
+        payment_type_name: '',
+        customer_id: '',
+        customer_name: '',
+        sales_id: '',
+        sales_name: '',
+        transaction_date: '',
+        discount: 0,
+        discount_type: '',
+        discount_amount: 0,
+        total_discount: 0,
+        tax: 0,
+        tax_amount: 0,
+        total_amount: 0,
+        payment_status: '',
+        due_date: '',
+        status: '',
+        note: '',
+        items: [],
+    });
 
     const loadUserData = async () => {
         const storedTokenUser = await SecureStore.getItemAsync('userToken');
@@ -69,7 +90,9 @@ const GlobalProvider = ({ children }) => {
             itemName,
             setItemName,
             variantName,
-            setVariantName
+            setVariantName,
+            transaction,
+            setTransaction
         }}>{children}</GlobalContext.Provider>
     )
 }
