@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import { icons } from '../constants'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-const FormField = ({ title, value, handleChangeText, otherStyles, otherTextInputStyles, placeholder, keyboardType, handleBlur, editable, info, multiline, numberOfLines, testId, ...proops }) => {
+const FormField = ({ title, value, handleChangeText, otherStyles, otherTextInputStyles, placeholder, keyboardType, handleBlur, editable, info, multiline, numberOfLines, testId, textStyle, ...proops }) => {
     const [showPassword, setShowPassword] = useState(false)
     const [showPasswordConfirm, setShowPasswordConfirm] = useState(false)
     const [showPasswordNew, setShowPasswordNew] = useState(false)
@@ -20,7 +20,7 @@ const FormField = ({ title, value, handleChangeText, otherStyles, otherTextInput
             </View>
             <View className={`border-2 border-gray-200 w-full px-4 rounded-xl focus:border-secondary items-center flex-row ${otherTextInputStyles}`}>
                 <TextInput
-                    className="flex-1 text-gray-100 font-poppinsSemiBold text-base"
+                    className={`flex-1 text-gray-100 font-poppinsSemiBold ${textStyle ? textStyle : 'text-base'}`}
                     value={value}
                     placeholder={placeholder}
                     placeholderTextColor="#7b7b8b"

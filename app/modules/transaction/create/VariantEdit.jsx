@@ -16,6 +16,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { FormatAmount, FormatDateForQuery, UnFormatAmount } from '../../../../lib/globalFunction'
 import { TextInput } from 'react-native'
 import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry'
+import { da, se } from 'date-fns/locale'
 
 const validationSchema = Yup.object().shape({
     // category: Yup.string().required('*kategori toko wajib diisi'),
@@ -23,7 +24,7 @@ const validationSchema = Yup.object().shape({
     // amount: Yup.string().matches(/^[0-9]+$/, '*nominal harus berupa angka').required('*nominal wajib diisi'),
 });
 
-const Variant = () => {
+const VariantEdit = () => {
     const route = useRoute();
     const { id } = route.params;
 
@@ -58,7 +59,6 @@ const Variant = () => {
 
     const [initialValues, setInitialValues] = useState({
         item_id: id,
-        item_id_encrypt: '',
         item_name: '',
         brand_id: '',
         brand_name: '',
@@ -89,49 +89,101 @@ const Variant = () => {
         setRefreshing(false);
     }
 
-    useEffect(() => {
-        setIsSubmitting(true);
+    const handleDelete = (idToDelete) => {
+        setTransaction(prevTransaction => ({
+            ...prevTransaction,
+            items: prevTransaction.items.filter(item => item.id !== idToDelete)
+        }));
+        setRefreshTrigger(true);
+        navigation.navigate('Transaction', {
+            screen: 'CartTransactionStack',
+        });
+    }
 
-        const getData = async (id) => {
-            try {
-                const response = await fetchData(`${API_HOST}/item-variant/store/list/${id}`,
-                    {
-                        headers: {
-                            'X-access-token': user.token,
-                            'Content-Type': 'application/json',
-                            'Accept': 'application/json',
-                        },
-                        method: 'get',
-                    });
+    const getData = async (value) => {
+        try {
+            const response = await fetchData(`${API_HOST}/item-variant/store/list/${value}`,
+                {
+                    headers: {
+                        'X-access-token': user.token,
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                    },
+                    method: 'get',
+                });
 
-                if (response.code) {
-                    if (response.code == 200) {
-                        const formattedData = response.data.map(item => ({
-                            label: item.name + '  ( ' + FormatAmount(item.stock) + ' ' + item.sku + ' )',
-                            value: item.id,
-                        }));
-                        setVariantList(formattedData);
-                        setDataVariant(response.data);
-                    }
-                } else {
-                    Alert.alert(response.message)
+            if (response.code) {
+                if (response.code == 200) {
+                    const formattedData = response.data.map(item => ({
+                        label: item.name + '  ( ' + FormatAmount(item.stock) + ' ' + item.sku + ' )',
+                        value: item.id,
+                    }));
+                    setVariantList(formattedData);
+                    setDataVariant(response.data);
                 }
-            } catch (error) {
-                Alert.alert(error.message);
+            } else {
+                Alert.alert(response.message)
             }
-        };
-        getData(id);
+        } catch (error) {
+            Alert.alert(error.message);
+        }
+    };
 
+    useEffect(() => {
+        const selectedVariant = transaction.items.find(item => item.id == id);
+
+        setIsPercent(selectedVariant.discount_type == 'PERSEN' ? true : false);
+        setIsWholesale(selectedVariant.is_whole_sale == 'YA' ? true : false);
+        setIsSpecialPrice(selectedVariant.is_spesial_price == 'YA' ? true : false);
+
+        getDataDiscount(selectedVariant.variant_id);
+
+        if (selectedVariant.is_whole_sale == "YA") {
+            getDataWholeSale(selectedVariant.variant_id);
+        }
+
+
+        getData(selectedVariant.item_id_encrypt);
+
+        setInitialValues({
+            id: id,
+            item_id: selectedVariant.item_id,
+            item_name: selectedVariant.item_name,
+            brand_id: selectedVariant.brand_id,
+            brand_name: selectedVariant.brand_name,
+            category_id: selectedVariant.category_id,
+            category_name: selectedVariant.category_name,
+            variant_id: selectedVariant.variant_id,
+            variant_name: selectedVariant.variant_name,
+            barcode: selectedVariant.barcode,
+            stock: selectedVariant.stock,
+            sku: selectedVariant.sku,
+            hpp: selectedVariant.hpp,
+            quantity: selectedVariant.quantity,
+            uom: selectedVariant.uom,
+            price_origin: selectedVariant.price,
+            price: selectedVariant.price,
+            discount: selectedVariant.discount,
+            discount_type: selectedVariant.discount_type,
+            discount_item_amount: selectedVariant.discount_item_amount,
+            sub_total: selectedVariant.sub_total,
+            is_spesial_price: selectedVariant.is_spesial_price,
+            is_whole_sale: selectedVariant.is_whole_sale,
+            is_bundling: selectedVariant.is_bundling,
+        });
     }, [refetchTrigger]);
 
     const submitAction = async (form) => {
         setTransaction(prevTransaction => ({
             ...prevTransaction,
-            items: [...prevTransaction.items, form]
+            items: prevTransaction.items.map(item =>
+                item.id === form.id ? { ...item, ...form } : item
+            )
         }));
 
+        setRefreshTrigger(true);
         navigation.navigate('Transaction', {
-            screen: 'CreateTransactionStack',
+            screen: 'CartTransactionStack',
         });
     }
 
@@ -201,83 +253,6 @@ const Variant = () => {
         }
     };
 
-    const variantChange = async (value, resetForm) => {
-        setIsPercent(true);
-        setIsWholesale(false);
-        setIsSpecialPrice(false);
-        setIsProgramDiscount(false);
-
-        let discount = 0
-        let discount_type = ''
-        let max_amount = 0
-        let min_order = 0
-        let disc_amount = 0
-
-        let dataDiscountTmp = await getDataDiscount(value);
-
-        if (dataDiscountTmp) {
-            if (dataDiscountTmp.length > 0) {
-                if (dataDiscountTmp[0].discount_type == 'PERSEN') {
-                    setIsPercent(true);
-                } else {
-                    setIsPercent(false);
-                }
-                discount = dataDiscountTmp[0].discount
-                discount_type = dataDiscountTmp[0].discount_type
-                max_amount = dataDiscountTmp[0].maximum_amount
-                min_order = dataDiscountTmp[0].minimum_amount
-            }
-        } else {
-            setIsPercent(true);
-        }
-
-        const selectedVariant = dataVariant.find(item => item.id == value);
-        disc_amount = dataDiscountTmp ? discount_type == 'PERSEN' ? (selectedVariant.price * discount) / 100 : (selectedVariant.price - discount) : 0
-        disc_amount = selectedVariant.price - disc_amount > max_amount ? max_amount : selectedVariant.price - disc_amount
-
-        let subTotal = selectedVariant.price - disc_amount
-        if (selectedVariant.price < min_order) {
-            discount = 0
-            subTotal = selectedVariant.price
-        }
-
-        if (selectedVariant.is_whole_sale == "YA") {
-            await getDataWholeSale(value);
-        }
-
-        setIsSubmitting(false);
-
-        setInitialValues({
-            id: transaction.items.length + 1,
-            item_id: selectedVariant.item_id,
-            item_id_encrypt: id,
-            item_name: selectedVariant.item_name,
-            brand_id: selectedVariant.brand_id,
-            brand_name: selectedVariant.brand_name,
-            category_id: selectedVariant.category_id,
-            category_name: selectedVariant.category_name,
-            variant_id: selectedVariant.id,
-            variant_name: selectedVariant.name,
-            barcode: selectedVariant.barcode,
-            stock: selectedVariant.stock,
-            sku: selectedVariant.sku,
-            hpp: selectedVariant.hpp,
-            quantity: 1,
-            uom: selectedVariant.uom,
-            price_origin: selectedVariant.price,
-            price: selectedVariant.price,
-            discount: discount,
-            discount_type: discount_type,
-            discount_item_amount: disc_amount,
-            sub_total: Math.round(subTotal),
-            is_spesial_price: 'TIDAK',
-            is_whole_sale: selectedVariant.is_whole_sale,
-            is_bundling: selectedVariant.is_bundling,
-        });
-
-        resetForm({ values: initialValues });
-    }
-
     const handleDiscount = async (value, resetForm) => {
         if (initialValues.price > 0) {
             if (typeof value == 'string' && value.includes('.')) {
@@ -298,7 +273,6 @@ const Variant = () => {
 
             const newPrice = price - discount_item_amount;
             const subTotal = Math.round(newPrice * quantity);
-            discount_item_amount = Math.round(discount_item_amount * quantity);
 
             if (isPercent) {
                 setInitialValues((prev) => ({ ...prev, discount_type: 'PERSEN', sub_total: subTotal, discount: discount, discount_item_amount: discount_item_amount }));
@@ -346,9 +320,8 @@ const Variant = () => {
         }
         const newPrice = price - discount_item_amount;
         const subTotal = Math.round(newPrice * quantity);
-        discount_item_amount = Math.round(discount_item_amount * quantity);
 
-        setInitialValues((prev) => ({ ...prev, quantity: value, sub_total: subTotal, price: price, discount_item_amount: discount_item_amount }));
+        setInitialValues((prev) => ({ ...prev, quantity: value, sub_total: subTotal, price: price }));
         resetForm({ values: initialValues });
     }
 
@@ -373,9 +346,8 @@ const Variant = () => {
             }
             const newPrice = price - discount_item_amount;
             const subTotal = Math.round(newPrice * quantity);
-            discount_item_amount = Math.round(discount_item_amount * quantity);
 
-            setInitialValues((prev) => ({ ...prev, price: price, sub_total: subTotal, discount_item_amount: discount_item_amount }));
+            setInitialValues((prev) => ({ ...prev, price: price, sub_total: subTotal }));
             resetForm({ values: initialValues });
         } else {
             setInitialValues((prev) => ({ ...prev, price: '', sub_total: 0 }));
@@ -401,13 +373,14 @@ const Variant = () => {
                                 title="Variasi Produk"
                                 data={variantList}
                                 value={values.variant_id}
-                                onValueChange={(value) => { setFieldValue('variant_id', value); variantChange(value, resetForm); }}
+                                onValueChange={(value) => { setFieldValue('variant_id', value); }}
                                 handleChangeText={handleChange('variant_id')}
                                 handleBlur={handleBlur('variant_id')}
                                 placeholder="Pilih Variasi"
                                 otherStyles="mt-0"
                                 dropdownPosition="bottom"
                                 testId="txt001"
+                                disable={true}
                             />
                             {touched.category && errors.category && <Text className="text-gray-50">{errors.category}</Text>}
 
@@ -594,12 +567,20 @@ const Variant = () => {
                             <View className="border-b-4 border-gray-200 px-4 py-2 mb-4 "></View>
 
                             <CustomButton
-                                title="Tambah ke keranjang"
+                                title="Simpan"
                                 handlePress={handleSubmit}
                                 containerStyles={"mt-10 bg-secondary-200"}
                                 textStyles="text-white"
                                 isLoading={isSubmitting}
                                 testId="btn001"
+                            />
+                            <CustomButton
+                                title="Hapus Produk"
+                                handlePress={() => handleDelete(initialValues.id)}
+                                containerStyles={""}
+                                isLoading={isSubmitting}
+                                textStyles={"color-red-500 underline"}
+                                testId="btn002"
                             />
                         </View>
                     )}
@@ -614,4 +595,4 @@ const Variant = () => {
     )
 }
 
-export default Variant
+export default VariantEdit

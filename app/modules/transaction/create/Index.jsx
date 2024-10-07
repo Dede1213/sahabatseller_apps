@@ -91,6 +91,7 @@ const Index = () => {
   }
 
   useEffect(() => {
+    setIsLoading(true);
     const getDataCategory = async () => {
       try {
         const response = await fetchData(`${API_HOST}/item-category/list/store`,

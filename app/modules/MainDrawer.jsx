@@ -74,6 +74,11 @@ import TransactionHistory from './transaction/history/Index';
 import TransactionDetail from './transaction/history/Detail';
 import TransactionVariant from './transaction/create/Variant';
 import TransactionCart from './transaction/create/Cart';
+import TransactionPayment from './transaction/create/Payment';
+import TransactionCash from './transaction/create/Cash';
+import TransactionVariantEdit from './transaction/create/VariantEdit';
+import TransactionDebt from './transaction/create/Debt';
+import TransactionOther from './transaction/create/Other';
 
 const CustomHeaderLeft = ({ onPress }) => (
   <TouchableOpacity onPress={onPress} className="ml-2">
@@ -571,7 +576,7 @@ function TransactionStackNavigator({ navigation }) {
         options={{
           headerShown: true,
           headerLeft: () => <CustomHeaderLeftBack onPress={() => navigation.navigate('Transaction', { screen: 'TransactionStack' })} />,
-          headerTitle: 'Tambah Transaksi',
+          headerTitle: 'Pilih Produk',
         }}
       />
       <TransactionStack.Screen name="HistoryTransactionStack" component={TransactionHistory}
@@ -592,7 +597,7 @@ function TransactionStackNavigator({ navigation }) {
         options={{
           headerShown: true,
           headerLeft: () => <CustomHeaderLeftBack onPress={() => navigation.navigate('Transaction', { screen: 'CreateTransactionStack' })} />,
-          headerTitle: 'Tambah Transaksi',
+          headerTitle: 'Pilih Variasi Produk',
         }}
       />
       <TransactionStack.Screen name="CartTransactionStack" component={TransactionCart}
@@ -600,6 +605,41 @@ function TransactionStackNavigator({ navigation }) {
           headerShown: true,
           headerLeft: () => <CustomHeaderLeftBack onPress={() => navigation.navigate('Transaction', { screen: 'TransactionStack' })} />,
           headerTitle: 'Keranjang Belanja',
+        }}
+      />
+       <TransactionStack.Screen name="PaymentTransactionStack" component={TransactionPayment}
+        options={{
+          headerShown: true,
+          headerLeft: () => <CustomHeaderLeftBack onPress={() => navigation.navigate('Transaction', { screen: 'CartTransactionStack' })} />,
+          headerTitle: 'Pembayaran',
+        }}
+      />
+      <TransactionStack.Screen name="CashTransactionStack" component={TransactionCash}
+        options={{
+          headerShown: true,
+          headerLeft: () => <CustomHeaderLeftBack onPress={() => navigation.navigate('Transaction', { screen: 'PaymentTransactionStack' })} />,
+          headerTitle: 'Tunai',
+        }}
+      />
+      <TransactionStack.Screen name="VariantEditTransactionStack" component={TransactionVariantEdit}
+        options={{
+          headerShown: true,
+          headerLeft: () => <CustomHeaderLeftBack onPress={() => navigation.navigate('Transaction', { screen: 'CartTransactionStack' })} />,
+          headerTitle: 'Ubah Produk Transaksi',
+        }}
+      />
+      <TransactionStack.Screen name="DebtTransactionStack" component={TransactionDebt}
+        options={{
+          headerShown: true,
+          headerLeft: () => <CustomHeaderLeftBack onPress={() => navigation.navigate('Transaction', { screen: 'CartTransactionStack' })} />,
+          headerTitle: 'Hutang',
+        }}
+      />
+      <TransactionStack.Screen name="OtherTransactionStack" component={TransactionOther}
+        options={{
+          headerShown: true,
+          headerLeft: () => <CustomHeaderLeftBack onPress={() => navigation.navigate('Transaction', { screen: 'CartTransactionStack' })} />,
+          headerTitle: 'Lainya',
         }}
       />
     </TransactionStack.Navigator>

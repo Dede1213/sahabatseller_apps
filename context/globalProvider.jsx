@@ -26,14 +26,16 @@ const GlobalProvider = ({ children }) => {
         discount: 0,
         discount_type: '',
         discount_amount: 0,
-        total_discount: 0,
-        tax: 0,
+        total_discount_amount: 0,
+        tax: '',
         tax_amount: 0,
         total_amount: 0,
         payment_status: '',
         due_date: '',
         status: '',
         note: '',
+        money_receive: 0,
+        money_return: 0,
         items: [],
     });
 
